@@ -5,6 +5,7 @@
  */
 package co.com.ppi.modelo;
 
+import co.com.ppi.util.Validador;
 import co.com.ppi.entidades.Usuario;
 import co.com.ppi.util.Conexion;
 import java.sql.Connection;
@@ -33,7 +34,7 @@ public class UsuarioDAO {
                                   int tipoIdentificacion,String telefono,
                                   String password,int idPerfil)
     {
-        String sql="INSERT INTO USUARIO VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql="INSERT INTO USUARIO VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,null,null)";
         try
         {
             boolean valPass = validarPassword(password);
@@ -402,28 +403,26 @@ public class UsuarioDAO {
     
     public String logueoUsuario (String cuenta, String password){
         try {
-            String sqlI="SELECT COUNT (*) CONT FROM USUARIO WHERE "
-                    + "CUENTA = '"+cuenta+"' AND PASSWORD = '"+password+"' AND ESTADO='A'";
+            String sql="SELECT COUNT (*) CONT FROM USUARIO WHERE CUENTA = ? AND PASSWORD = ? AND ESTADO='A' ";
             con=conex.conexion();
-            pr=con.prepareStatement(sqlI);
+            pr=con.prepareStatement(sql);
+            pr.setString(1,cuenta);
+            pr.setString(2,password);
+
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String[] var = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s",
-                    "t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P",
-                    "Q","R","S","T","U","V","X","Y","Z","0","1","2","3","4","5","6","7","8","9",};
-                    String[] vec= new String [10];
-                    String token = "";
-                    for(int i=0;i<=9;i++){
-			vec[i]=var[(int)(Math.random()*62)];
-			System.out.print(vec[i]);//solo muestra el arreglo
-                        token = token.concat(vec[i]);
-                    }
-                    String sql="UPDATE USUARIO SET TOKEN='"+token+"' WHERE CUENTA = '"+cuenta+"' "
-                            + "AND PASSWORD = '"+password+"'";
+                    
+                    String token = Validador.crearToken();
+                    sql="UPDATE USUARIO SET TOKEN = ? WHERE CUENTA = ? AND PASSWORD = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setString(1,token);
+                    pr.setString(2,cuenta);
+                    pr.setString(3,password);
                     pr.executeUpdate();
+                    Validador.actualizarFechaToken(token);
+
                 }else{
                     return "Usuario y/o password incorrecto";
                 }
