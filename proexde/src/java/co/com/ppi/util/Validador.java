@@ -64,7 +64,7 @@ public static class Validador {
     }
     
     
-    public String getMensajeToken(int x){
+    public String getMensajeToken(){
         return "La sesión ha expirado.";
     }
 
