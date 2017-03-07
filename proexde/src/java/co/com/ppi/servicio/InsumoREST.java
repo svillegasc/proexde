@@ -5,6 +5,7 @@
  */
 package co.com.ppi.servicio;
 
+import co.com.ppi.util.Validador;
 import co.com.ppi.entidades.Insumo;
 import co.com.ppi.modelo.InsumoDAO;
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class InsumoREST {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarInsumo(/*@QueryParam("idInsumo") int idInsumo, */
+                                 @QueryParam("token")String token,
                                  @QueryParam("nombre")String nombre, 
                                  @QueryParam("descripcion")String descripcion, 
                                  @QueryParam("precioCompra")int precioCompra,
@@ -80,8 +82,14 @@ public class InsumoREST {
                                  @QueryParam("ultimaEntrada")String ultimaEntrada,
                                  @QueryParam("ultimaSalida")String ultimaSalida){
         InsumoDAO dao = new InsumoDAO();
-        return dao.insertarInsumo(/*idInsumo,*/nombre,descripcion,precioCompra,
-                                  unidadMedida,ultimaEntrada,ultimaSalida);
+        
+        if ( Validador.validar_token(token) ){
+            return dao.insertarInsumo(/*idInsumo,*/nombre,descripcion,precioCompra, unidadMedida,ultimaEntrada,ultimaSalida);    
+        }else{
+            return Validador.getMensajeToken();
+        }
+        
+        
     }
     
     /**
