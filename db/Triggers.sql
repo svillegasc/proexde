@@ -117,6 +117,7 @@ END;
 
 /
 
+
 /*PROCEDIEMTO QUE SE ENCARGA DE ACTUALIZAR EL STOCK DE INSUMOS, CON LOS VALORES
 DEL DETALLE DEL PEDIDO DEL CLIENTE*/
 create or replace PROCEDURE SP_restarStockInsumo(pIdPedido number)
@@ -141,6 +142,57 @@ END;
 
 /
 
+
+/*PROCEDIEMTO QUE SE ENCARGA DE ACTUALIZAR EL STOCK DE INSUMOS, CON LOS VALORES
+DEL DETALLE DEL PEDIDO DEL CLIENTE*/
+create or replace PROCEDURE SP_sumarStockInsumo(pIdPedido number)
+IS
+idInsumo number;
+cantidadUtilizada number;
+cantidad number;
+stock number;
+CURSOR c_DPedido IS
+SELECT id_producto,cantidad_pedida FROM DETALLE_PEDIDO_CLIENTE WHERE id_pedido = pIdPedido;
+BEGIN
+  FOR r_DPedido IN c_DPedido  LOOP
+    SELECT id_insumo,cantidad_utilizada into idInsumo,cantidadUtilizada  FROM receta WHERE id_producto = r_DPedido.id_producto;
+    cantidad := r_DPedido.cantidad_pedida * cantidadUtilizada;   
+    UPDATE insumo SET stock = stock + cantidad WHERE id_insumo = idInsumo;
+  END LOOP;
+  EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('El SQLCODE ES: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('LA DESCRIPCION ES: ' || SQLERRM);
+END;
+
+/
+
+
+/*TRIGGER QUE SE ENCARGA DE GESTIONAR CUANDO SE ACTUALIZA UNA VENTA
+QUE SE ENCUENTRA YA EN ESTADO DE PRODUCCIÓN, ACTUALIZA LOS STOCKS*/
+create or replace TRIGGER TRG_GestionarStockPedidoAct
+BEFORE UPDATE
+ON pedido
+REFERENCING NEW AS NEW OLD AS OLD
+FOR EACH ROW
+DECLARE
+  descrip varchar(50);
+BEGIN
+  SELECT descripcion INTO descrip FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = :new.estado_produccion;
+  IF descrip = 'PRODUCCION' THEN
+    IF :new.cantidad_pedida <> :old.cantidad_pedida THEN
+      SP_sumarStockInsumo(:new.id_pedido);
+    END IF;
+  END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+      DBMS_OUTPUT.PUT_LINE('El SQLCODE ES: ' || SQLCODE);
+      DBMS_OUTPUT.PUT_LINE('LA DESCRIPCION ES: ' || SQLERRM);
+END;
+
+/
+
+
 /*TRIGGER QUE SE ENCARGA DE GESTIONAR EL STOCK DE LOS PRODUCTO PARA LA VENTA,
 VALIDA PRIMERO SI LA CANTIDAD PEDIDA SE ENCUENTRA DISPONIBLE EN INVENTARIO,
 SI ESTA DISPONIBLE ACTUALIZA EL STOCK DEL PRODUCTO Y REALIZA EL PEDIDO*/
@@ -153,26 +205,32 @@ DECLARE
 no_stock EXCEPTION;
 sw number;
 descrip varchar(50);
+descripOld varchar(50);
 BEGIN
   SELECT descripcion INTO descrip FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = :new.estado_produccion;
+  SELECT descripcion INTO descripOld FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = :old.estado_produccion;
     IF descrip = 'PRODUCCION' THEN
       sw := FN_validarStockInsumo(:new.id_pedido);
       IF sw = 1 THEN
        -- RAISE no_stock;
-       apex_application.g_print_success_message := 'No tiene stock suficiente, el pedido paso a estar PENDIENTE por stock';
+	      UPDATE pedido SET estado_produccion = "PENDIENTE" WHERE id_pedido = :new.id_pedido;        
+       	apex_application.g_print_success_message := 'No tiene stock suficiente, el pedido paso a estar PENDIENTE por stock';
       ELSE
         SP_restarStockInsumo(:new.id_pedido);
       END IF;
+    ELSIF descrip = 'CANCELADO' AND descripOld = 'PRODUCCION' THEN
+      SP_sumarStockInsumo(:new.id_pedido);
     END IF;
   EXCEPTION
-      WHEN no_stock THEN
-       RAISE_APPLICATION_ERROR(-20004, 'No tiene stock suficiente, el pedido paso a estar PENDIENTE por stock');
+      --WHEN no_stock THEN
+       --RAISE_APPLICATION_ERROR(-20004, 'No tiene stock suficiente, el pedido paso a estar PENDIENTE por stock');
       WHEN OTHERS THEN
         DBMS_OUTPUT.PUT_LINE('El SQLCODE ES: ' || SQLCODE);
         DBMS_OUTPUT.PUT_LINE('LA DESCRIPCION ES: ' || SQLERRM);
 END;
 
 /
+
 
 /*TRIGGER QUE SE ENCARGA DE GESTION EL TOTAL (EN DINERO) DE LOS PRODUCTOS QUE SE PEDIRAN AL PROVEEDOR*/
 create or replace TRIGGER TRG_GestionarPrecioCompra
@@ -308,6 +366,7 @@ END;
 
 /
 
+
 /*PROCEDIMIENTO ALMACENADO QUE SE ENCARGA DE ACTUALIZAR EL STOCK DE INSUMO
 CUANDO EL PEDIDO QUE SE LE HIZO AL PROVEEDOR SE ENCUENTRA TERMINADO*/
 create or replace PROCEDURE SP_actualizarStockInsumo(pIdPedidoProveedor number)
@@ -325,6 +384,7 @@ BEGIN
 END;
 
 /
+
 
 /*TRIGGER QUE SE ACTIVA CUANDO SE INSERTA O SE ACTUALIZA UN PEDIDO AL PROVEEDOR
 SI EL PEDIDO PASA A ESTAR TERMINADO ACTUALIZA LOS STOCK DE LOS INSUMOS PEDIDOS*/
