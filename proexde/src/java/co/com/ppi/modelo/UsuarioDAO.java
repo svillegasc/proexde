@@ -402,6 +402,9 @@ public class UsuarioDAO {
     }
     
     public String logueoUsuario (String cuenta, String password){
+        
+        String token = null;
+        
         try {
             String sql="SELECT COUNT (*) CONT FROM USUARIO WHERE CUENTA = ? AND PASSWORD = ? AND ESTADO='A' ";
             con=conex.conexion();
@@ -413,7 +416,7 @@ public class UsuarioDAO {
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     
-                    String token = Validador.crearToken();
+                    token = Validador.crearToken();
                     sql="UPDATE USUARIO SET TOKEN = ? WHERE CUENTA = ? AND PASSWORD = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
@@ -430,7 +433,7 @@ public class UsuarioDAO {
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Se logueo Correctamente";
+        return token;
     }
     
     public boolean validarPassword(String pass){
