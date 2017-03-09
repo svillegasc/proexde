@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.DetallePermiso;
 import co.com.ppi.modelo.DetallePermisoDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/detallePermiso")
 public class DetallePermisoREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -63,31 +64,47 @@ public class DetallePermisoREST {
     
     /**
      *
-     * @param id_Permiso
-     * @param id_Perfil
+     * @param token
+     * @param idPermiso
+     * @param idPerfil
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
-    public String insertarDetallePermiso(@HeaderParam("idPermiso") int idPermiso, 
-                                          @HeaderParam("idPerfil") int idPerfil){
+    public String insertarDetallePermiso(@HeaderParam("token")String token,
+                                         @HeaderParam("idPermiso") int idPermiso, 
+                                         @HeaderParam("idPerfil") int idPerfil) throws Exception{
         DetallePermisoDAO dao = new DetallePermisoDAO();
-        return dao.insertarDetallePermiso(idPermiso,idPerfil);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarDetallePermiso(idPermiso,idPerfil);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPermiso
      * @param idPerfil
      * @return
+     * @throws java.lang.Exception
      */
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarDetallePermiso(@HeaderParam("idPermiso") int idPermiso,
-                                          @HeaderParam("idPerfil") int idPerfil){
+    public String eliminarDetallePermiso(@HeaderParam("token")String token,
+                                         @HeaderParam("idPermiso") int idPermiso,
+                                         @HeaderParam("idPerfil") int idPerfil) throws Exception{
         DetallePermisoDAO dao = new DetallePermisoDAO();
-        return dao.eliminarDetallePermiso(idPermiso,idPerfil);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarDetallePermiso(idPermiso,idPerfil);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

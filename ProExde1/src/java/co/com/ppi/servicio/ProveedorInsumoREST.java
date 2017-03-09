@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.ProveedorInsumo;
 import co.com.ppi.modelo.ProveedorInsumoDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -27,6 +28,8 @@ import javax.ws.rs.HeaderParam;
 @Path("/proveedorInsumo")
 public class ProveedorInsumoREST {
     
+    
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -63,31 +66,47 @@ public class ProveedorInsumoREST {
     
     /**
      *
-     * @param id_Proveedor
-     * @param id_Insumo
+     * @param token
+     * @param idProveedor
+     * @param idInsumo
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
-    public String insertarProveedorInsumo(@HeaderParam("idProveedor") int idProveedor, 
-                                          @HeaderParam("idInsumo") int idInsumo){
+    public String insertarProveedorInsumo(@HeaderParam("token")String token,
+                                          @HeaderParam("idProveedor") int idProveedor, 
+                                          @HeaderParam("idInsumo") int idInsumo) throws Exception{
         ProveedorInsumoDAO dao = new ProveedorInsumoDAO();
-        return dao.insertarProveedorInsumo(idProveedor,idInsumo);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarProveedorInsumo(idProveedor,idInsumo);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idProveedor
      * @param idInsumo
      * @return
+     * @throws java.lang.Exception
      */
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarProveedorInsumo(@HeaderParam("idProveedor") int idProveedor,
-                                          @HeaderParam("idInsumo") int idInsumo){
+    public String eliminarProveedorInsumo(@HeaderParam("token")String token,
+                                          @HeaderParam("idProveedor") int idProveedor,
+                                          @HeaderParam("idInsumo") int idInsumo) throws Exception{
         ProveedorInsumoDAO dao = new ProveedorInsumoDAO();
-        return dao.eliminarProveedorInsumo(idProveedor,idInsumo);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarProveedorInsumo(idProveedor,idInsumo);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

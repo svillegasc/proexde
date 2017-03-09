@@ -12,6 +12,7 @@ package co.com.ppi.entidades;
 public class EstadoProduccion {
     private int estadoProduccion = -1;
     private String descripcion = null;
+    private String mensajeError = null;
 
     public int getEstadoProduccion() {
         return estadoProduccion;
@@ -27,6 +28,14 @@ public class EstadoProduccion {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

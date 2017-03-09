@@ -13,6 +13,7 @@ public class DetallePermiso {
     private int idPermiso = -1;
     private int idPerfil = -1;
     private String estado = null;
+    private String mensajeError = null;
 
     public int getIdPermiso() {
         return idPermiso;
@@ -36,6 +37,14 @@ public class DetallePermiso {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

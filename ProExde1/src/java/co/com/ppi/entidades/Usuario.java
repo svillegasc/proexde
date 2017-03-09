@@ -23,6 +23,7 @@ public class Usuario {
     private String estado = null;
     private int idPerfil = -1;
     private int token = -1;
+    private String mensajeError = null;
 
     public int getIdUsuario() {
         return idUsuario;
@@ -127,5 +128,12 @@ public class Usuario {
     public void setToken(int token) {
         this.token = token;
     }
-    
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
+    }
 }

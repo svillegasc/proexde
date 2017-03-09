@@ -14,6 +14,7 @@ public class DetallePedidoProveedor {
     private int idInsumo = -1;
     private int cantidad = -1;
     private int precio = -1;
+    private String mensajeError = null;
 
     public int getIdPedidoProveedor() {
         return idPedidoProveedor;
@@ -45,6 +46,14 @@ public class DetallePedidoProveedor {
 
     public void setPrecio(int precio) {
         this.precio = precio;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

@@ -13,6 +13,7 @@ public class DetalleCotizacionCliente {
     private int idCotizacion = -1;
     private int idProducto = -1;
     private double precio = -1;
+    private String mensajeError = null;
 
     public int getIdCotizacion() {
         return idCotizacion;
@@ -36,6 +37,14 @@ public class DetalleCotizacionCliente {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
     
     

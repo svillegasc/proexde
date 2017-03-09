@@ -13,6 +13,7 @@ public class TipoIdentificacion {
     private int tipoIdentificacion = -1;
     private String descripcion = null;
     private String estado = null;
+    private String mensajeError = null;
 
     public int getTipoIdentificacion() {
         return tipoIdentificacion;
@@ -36,6 +37,14 @@ public class TipoIdentificacion {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
     
     

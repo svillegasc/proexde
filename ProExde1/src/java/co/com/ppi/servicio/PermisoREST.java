@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Permiso;
 import co.com.ppi.modelo.PermisoDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -27,6 +28,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/permiso")
 public class PermisoREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,44 +63,67 @@ public class PermisoREST {
     
     /**
      *
-     * @param idPermiso
+     * @param token
      * @param descripcion
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
-    public String insertarPermiso(/*@HeaderParam("idPermiso") int idPermiso,*/ 
-                                  @HeaderParam("descripcion")String descripcion){
+    public String insertarPermiso(/*@HeaderParam("idPermiso") int idPermiso,*/
+                                  @HeaderParam("token")String token,
+                                  @HeaderParam("descripcion")String descripcion) throws Exception{
         PermisoDAO dao = new PermisoDAO();
-        return dao.insertarPermiso(/*idPermiso,*/descripcion);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarPermiso(/*idPermiso,*/descripcion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPermiso
      * @param descripcion
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarPermiso(@HeaderParam("idPermiso") int idPermiso,
-                                    @HeaderParam("descripcion") String descripcion){
+    public String actualizarPermiso(@HeaderParam("token")String token,
+                                    @HeaderParam("idPermiso") int idPermiso,
+                                    @HeaderParam("descripcion") String descripcion) throws Exception{
         PermisoDAO dao = new PermisoDAO();
-        return dao.actualizarPermiso(idPermiso,descripcion);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarPermiso(idPermiso,descripcion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPermiso
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarPermiso(@HeaderParam("idPermiso") int idPermiso){
+    public String eliminarPermiso(@HeaderParam("token")String token,
+                                  @HeaderParam("idPermiso") int idPermiso) throws Exception{
         PermisoDAO dao = new PermisoDAO();
-        return dao.eliminarPermiso(idPermiso);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarPermiso(idPermiso);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

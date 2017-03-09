@@ -20,6 +20,7 @@ public class Pedido {
     private Date fechaTerminacion = null;
     private int estadoProduccion = -1;
     private int valorTotal = -1;
+    private String mensajeError = null;
 
     public int getIdPedido() {
         return idPedido;
@@ -83,6 +84,14 @@ public class Pedido {
 
     public void setValorTotal(int valorTotal) {
         this.valorTotal = valorTotal;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

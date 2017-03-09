@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Receta;
 import co.com.ppi.modelo.RecetaDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -16,7 +17,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -28,6 +28,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/receta")
 public class RecetaREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -64,51 +65,75 @@ public class RecetaREST {
     
     /**
      *
+     * @param token
      * @param idProducto
      * @param idInsumo
      * @param cantidadUtilizada
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
-    public String insertarReceta(@HeaderParam("idProducto") int idProducto, 
+    public String insertarReceta(@HeaderParam("token")String token,
+                                 @HeaderParam("idProducto") int idProducto, 
                                  @HeaderParam("idInsumo") int idInsumo, 
-                                 @HeaderParam("cantidadUtilizada") int cantidadUtilizada){
+                                 @HeaderParam("cantidadUtilizada") int cantidadUtilizada) throws Exception{
         RecetaDAO dao = new RecetaDAO();
-        return dao.insertarReceta(idProducto,idInsumo,cantidadUtilizada);
-    }
-    
-    /**
-     *
-     * @param idProducto
-     * @param idInsumo
-     * @param cantidadUtilizada
-     * @return
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/actualizar")
-    public String actualizarReceta(@HeaderParam("idProducto") int idProducto, 
-                                   @HeaderParam("idInsumo") int idInsumo, 
-                                   @HeaderParam("cantidadUtilizada") int cantidadUtilizada){
-        RecetaDAO dao = new RecetaDAO();
-        return dao.actualizarReceta(idProducto,idInsumo,cantidadUtilizada);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarReceta(idProducto,idInsumo,cantidadUtilizada);
+        }else{
+            return validador.getMensajeToken();
+        } 
         
     }
     
     /**
      *
+     * @param token
+     * @param idProducto
+     * @param idInsumo
+     * @param cantidadUtilizada
+     * @return
+     * @throws java.lang.Exception
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/actualizar")
+    public String actualizarReceta(@HeaderParam("token")String token,
+                                   @HeaderParam("idProducto") int idProducto, 
+                                   @HeaderParam("idInsumo") int idInsumo, 
+                                   @HeaderParam("cantidadUtilizada") int cantidadUtilizada) throws Exception{
+        RecetaDAO dao = new RecetaDAO();
+        if ( validador.validar_token(token) ){ 
+           return dao.actualizarReceta(idProducto,idInsumo,cantidadUtilizada); 
+        }else{
+            return validador.getMensajeToken();
+        } 
+        
+        
+    }
+    
+    /**
+     *
+     * @param token
      * @param idProducto
      * @param idInsumo
      * @return
+     * @throws java.lang.Exception
      */
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarReceta(@HeaderParam("idProducto") int idProducto,
-                                 @HeaderParam("idInsumo") int idInsumo){
+    public String eliminarReceta(@HeaderParam("token")String token,
+                                 @HeaderParam("idProducto") int idProducto,
+                                 @HeaderParam("idInsumo") int idInsumo) throws Exception{
         RecetaDAO dao = new RecetaDAO();
-        return dao.eliminarReceta(idProducto,idInsumo);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarReceta(idProducto,idInsumo);
+        }else{
+            return validador.getMensajeToken();
+        } 
+        
     }
 }

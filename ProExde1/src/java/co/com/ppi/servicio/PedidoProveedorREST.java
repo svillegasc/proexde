@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.PedidoProveedor;
 import co.com.ppi.modelo.PedidoProveedorDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/pedidoProveedor")
 public class PedidoProveedorREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,41 +62,56 @@ public class PedidoProveedorREST {
     
     /**
      *
+     * @param token
      * @param idProveedor
      * @param fechaPedido
      * @param estadoProduccion
      * @param total
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarPedidoProveedor(/*@HeaderParam("idPedidoProveedor") int idPedidoProveedor, */
+                                           @HeaderParam("token")String token,
                                            @HeaderParam("idProveedor") int idProveedor, 
                                            @HeaderParam("fechaPedido") String fechaPedido, 
                                            @HeaderParam("estadoPedido") int estadoProduccion,
-                                           @HeaderParam("total") int total){
+                                           @HeaderParam("total") int total) throws Exception{
         PedidoProveedorDAO dao = new PedidoProveedorDAO();
-        return dao.insertarPedidoProveedor(/*idPedidoProveedor,*/idProveedor,fechaPedido,estadoProduccion,total);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarPedidoProveedor(/*idPedidoProveedor,*/idProveedor,fechaPedido,estadoProduccion,total);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPedidoProveedor
      * @param idProveedor
      * @param fechaPedido
      * @param estadoProduccion
-     * @param total
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarPedidoProveedor(@HeaderParam("idPedidoProveedor") int idPedidoProveedor, 
+    public String actualizarPedidoProveedor(@HeaderParam("token")String token,
+                                            @HeaderParam("idPedidoProveedor") int idPedidoProveedor, 
                                             @HeaderParam("idProveedor") int idProveedor, 
                                             @HeaderParam("fechaPedido") String fechaPedido,
-                                            @HeaderParam("estadoPedido") int estadoProduccion){
+                                            @HeaderParam("estadoPedido") int estadoProduccion) throws Exception{
         PedidoProveedorDAO dao = new PedidoProveedorDAO();
-        return dao.actualizarPedidoProveedor(idPedidoProveedor,idProveedor,fechaPedido,estadoProduccion);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarPedidoProveedor(idPedidoProveedor,idProveedor,fechaPedido,estadoProduccion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

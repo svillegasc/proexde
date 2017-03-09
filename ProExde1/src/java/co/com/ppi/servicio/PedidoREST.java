@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Pedido;
 import co.com.ppi.modelo.PedidoDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -27,6 +28,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/pedido")
 public class PedidoREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,29 +63,38 @@ public class PedidoREST {
     
     /**
      *
+     * @param token
      * @param idCotizacion
      * @param fechaPedido
      * @param fechaInicio
      * @param fechaTerminacion
      * @param estadoProduccion
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarPedido(/*@HeaderParam("idPedido") int idPedido, */
+                                 @HeaderParam("token")String token,
                                  @HeaderParam("idCotizacion")int idCotizacion, 
                                  @HeaderParam("fechaPedido")String fechaPedido,
                                  @HeaderParam("fechaInicio")String fechaInicio,
                                  @HeaderParam("fechaTerminacion")String fechaTerminacion,
-                                 @HeaderParam("estadoProduccion")int estadoProduccion){
+                                 @HeaderParam("estadoProduccion")int estadoProduccion) throws Exception{
         PedidoDAO dao = new PedidoDAO();
-        return dao.insertarPedido(/*idPedido,*/idCotizacion,fechaPedido,
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarPedido(/*idPedido,*/idCotizacion,fechaPedido,
                                   fechaInicio,fechaTerminacion,estadoProduccion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPedido
      * @param idCotizacion
      * @param fechaPedido
@@ -92,20 +103,27 @@ public class PedidoREST {
      * @param fechaTerminacion
      * @param estadoProduccion
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarPedido(@HeaderParam("idPedido") int idPedido, 
+    public String actualizarPedido(@HeaderParam("token")String token,
+                                   @HeaderParam("idPedido") int idPedido, 
                                    @HeaderParam("idCotizacion")int idCotizacion, 
                                    @HeaderParam("fechaPedido")String fechaPedido, 
                                    @HeaderParam("cantidadProducida")int cantidadProducida,
                                    @HeaderParam("fechaInicio")String fechaInicio,
                                    @HeaderParam("fechaTerminacion")String fechaTerminacion,
-                                   @HeaderParam("estadoProduccion")int estadoProduccion){
+                                   @HeaderParam("estadoProduccion")int estadoProduccion) throws Exception{
         PedidoDAO dao = new PedidoDAO();
-        return dao.actualizarPedido(idPedido,idCotizacion,fechaPedido,cantidadProducida,
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarPedido(idPedido,idCotizacion,fechaPedido,cantidadProducida,
                                     fechaInicio,fechaTerminacion,estadoProduccion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
         
     }
 }

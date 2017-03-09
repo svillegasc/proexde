@@ -13,6 +13,7 @@ public class Perfil {
     private int idPerfil = -1;
     private String nombre = null;
     private String estado = null;
+    private String mensajeError = null;
 
     public int getIdPerfil() {
         return idPerfil;
@@ -36,6 +37,14 @@ public class Perfil {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

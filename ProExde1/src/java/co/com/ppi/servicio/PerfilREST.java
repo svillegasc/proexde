@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Perfil;
 import co.com.ppi.modelo.PerfilDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/perfil")
 public class PerfilREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,44 +62,67 @@ public class PerfilREST {
    
     /**
      *
-     * @param idPerfil
+     * @param token
      * @param nombre
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarPerfil(/*@HeaderParam("idPerfil") int idPerfil,*/
-                                 @HeaderParam("nombre")String nombre){
+                                 @HeaderParam("token")String token,
+                                 @HeaderParam("nombre")String nombre) throws Exception{
         PerfilDAO dao = new PerfilDAO();
-        return dao.insertarPerfil(/*idPerfil,*/nombre);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarPerfil(/*idPerfil,*/nombre);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPerfil
      * @param nombre
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarPerfil(@HeaderParam("idPerfil") int idPerfil,
-                                   @HeaderParam("nombre") String nombre){
+    public String actualizarPerfil(@HeaderParam("token")String token,
+                                   @HeaderParam("idPerfil") int idPerfil,
+                                   @HeaderParam("nombre") String nombre) throws Exception{
         PerfilDAO dao = new PerfilDAO();
-        return dao.actualizarPerfil(idPerfil,nombre);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarPerfil(idPerfil,nombre);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idPerfil
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarPerfil(@HeaderParam("idPerfil") int idPerfil){
+    public String eliminarPerfil(@HeaderParam("token")String token,
+                                 @HeaderParam("idPerfil") int idPerfil) throws Exception{
         PerfilDAO dao = new PerfilDAO();
-        return dao.eliminarPerfil(idPerfil);
+        if ( validador.validar_token(token) ){ 
+           return dao.eliminarPerfil(idPerfil); 
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

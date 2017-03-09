@@ -13,6 +13,7 @@ public class DetallePedidoCliente {
     private int idPedido = -1;
     private int idProducto = -1;
     private int cantidadPedida = -1;
+    private String mensajeError = null;
 
     public int getIdPedido() {
         return idPedido;
@@ -36,6 +37,14 @@ public class DetallePedidoCliente {
 
     public void setCantidadPedida(int cantidadPedida) {
         this.cantidadPedida = cantidadPedida;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

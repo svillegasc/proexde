@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.DetallePedidoProveedor;
 import co.com.ppi.modelo.DetallePedidoProveedorDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/detallePedidoProveedor")
 public class DetallePedidoProveedorREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -63,39 +64,55 @@ public class DetallePedidoProveedorREST {
     
     /**
      *
+     * @param token
      * @param idPedidoProveedor
      * @param idInsumo
      * @param cantidad
      * @param precio
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
-    public String insertarDetallePedidoProveedor(@HeaderParam("idPedidoProveedor")int idPedidoProveedor,
+    public String insertarDetallePedidoProveedor(@HeaderParam("token")String token,
+                                                 @HeaderParam("idPedidoProveedor")int idPedidoProveedor,
                                                  @HeaderParam("idInsumo")int idInsumo,
                                                  @HeaderParam("cantidad") int cantidad,
-                                                 @HeaderParam("precio") int precio){
+                                                 @HeaderParam("precio") int precio) throws Exception{
         DetallePedidoProveedorDAO dao = new DetallePedidoProveedorDAO();
-        return dao.insertarDetallePedidoProveedor(idPedidoProveedor,idInsumo,cantidad,precio);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarDetallePedidoProveedor(idPedidoProveedor,idInsumo,cantidad,precio);
+        }else{
+            return validador.getMensajeToken();
+        } 
+        
     }
     
     /**
      *
+     * @param token
      * @param idPedidoProveedor
      * @param idInsumo
      * @param cantidad
      * @param precio
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarDetallePedidoProveedor(@HeaderParam("idPedidoProveedor")int idPedidoProveedor,
+    public String actualizarDetallePedidoProveedor(@HeaderParam("token")String token,
+                                                   @HeaderParam("idPedidoProveedor")int idPedidoProveedor,
                                                    @HeaderParam("idInsumo")int idInsumo,
                                                    @HeaderParam("cantidad") int cantidad,
-                                                   @HeaderParam("precio") int precio){
+                                                   @HeaderParam("precio") int precio) throws Exception{
         DetallePedidoProveedorDAO dao = new DetallePedidoProveedorDAO();
-        return dao.actualizarDetallePedidoProveedor(idPedidoProveedor,idInsumo,cantidad,precio);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarDetallePedidoProveedor(idPedidoProveedor,idInsumo,cantidad,precio);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

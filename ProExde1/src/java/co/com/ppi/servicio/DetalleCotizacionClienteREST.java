@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.DetalleCotizacionCliente;
 import co.com.ppi.modelo.DetalleCotizacionClienteDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/detalleCotizacionCliente")
 public class DetalleCotizacionClienteREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -63,35 +64,51 @@ public class DetalleCotizacionClienteREST {
     
     /**
      *
+     * @param token
      * @param idCotizacion
      * @param idProducto
      * @param precio
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
-    public String insertarDetalleCotizacionCliente(@HeaderParam("idCotizacion") int idCotizacion, 
+    public String insertarDetalleCotizacionCliente(@HeaderParam("token")String token,
+                                                   @HeaderParam("idCotizacion") int idCotizacion, 
                                                    @HeaderParam("idProducto") int idProducto,
-                                                   @HeaderParam("precio") int precio){
+                                                   @HeaderParam("precio") int precio) throws Exception{
         DetalleCotizacionClienteDAO dao = new DetalleCotizacionClienteDAO();
-        return dao.insertarDetalleCotizacionCliente(idCotizacion,idProducto,precio);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarDetalleCotizacionCliente(idCotizacion,idProducto,precio);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idCotizacion
      * @param idProducto
      * @param precio
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarDetalleCotizacionCliente(@HeaderParam("idCotizacion") int idCotizacion, 
+    public String actualizarDetalleCotizacionCliente(@HeaderParam("token")String token,
+                                                     @HeaderParam("idCotizacion") int idCotizacion, 
                                                      @HeaderParam("idProducto") int idProducto,
-                                                     @HeaderParam("precio") int precio){
+                                                     @HeaderParam("precio") int precio) throws Exception{
         DetalleCotizacionClienteDAO dao = new DetalleCotizacionClienteDAO();
-        return dao.actualizarDetalleCotizacionCliente(idCotizacion,idProducto,precio);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarDetalleCotizacionCliente(idCotizacion,idProducto,precio);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

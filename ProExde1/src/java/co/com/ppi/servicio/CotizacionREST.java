@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Cotizacion;
 import co.com.ppi.modelo.CotizacionDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -16,7 +17,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -27,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/cotizacion")
 public class CotizacionREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,23 +62,31 @@ public class CotizacionREST {
     
     /**
      *
-     * @param idCotizacion
+     * @param token
      * @param idUsuario
      * @param fechaCreacion
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarCotizacion(/*@HeaderParam("idCotizacion") int idCotizacion, */
+                                     @HeaderParam("token")String token,
                                      @HeaderParam("idUsuario")int idUsuario,
-                                     @HeaderParam("fechaCreacion")String fechaCreacion){
+                                     @HeaderParam("fechaCreacion")String fechaCreacion) throws Exception{
         CotizacionDAO dao = new CotizacionDAO();
-        return dao.insertarCotizacion(/*idCotizacion,*/idUsuario,fechaCreacion);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarCotizacion(/*idCotizacion,*/idUsuario,fechaCreacion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idCotizacion
      * @param idUsuario
      * @param fechaCreacion
@@ -86,23 +95,37 @@ public class CotizacionREST {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarCotizacion(@HeaderParam("idCotizacion") int idCotizacion,
+    public String actualizarCotizacion(@HeaderParam("token")String token,
+                                       @HeaderParam("idCotizacion") int idCotizacion,
                                        @HeaderParam("idUsuario")int idUsuario,
-                                       @HeaderParam("fechaCreacion")String fechaCreacion){
+                                       @HeaderParam("fechaCreacion")String fechaCreacion) throws Exception{
         CotizacionDAO dao = new CotizacionDAO();
-        return dao.actualizarCotizacion(idCotizacion,idUsuario,fechaCreacion);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarCotizacion(idCotizacion,idUsuario,fechaCreacion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idCotizacion
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarCotizacion(@HeaderParam("idCotizacion") int idCotizacion){
+    public String eliminarCotizacion(@HeaderParam("token")String token,
+                                     @HeaderParam("idCotizacion") int idCotizacion) throws Exception{
         CotizacionDAO dao = new CotizacionDAO();
-        return dao.eliminarCotizacion(idCotizacion);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarCotizacion(idCotizacion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

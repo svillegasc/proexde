@@ -13,6 +13,7 @@ public class Receta {
     private int idProducto = -1;
     private int idInsumo = -1;
     private int cantidadUtilizada = -1;
+    private String mensajeError = null;
 
     public int getIdProducto() {
         return idProducto;
@@ -38,5 +39,11 @@ public class Receta {
         this.cantidadUtilizada = cantidadUtilizada;
     }
 
-    
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
+    }
 }

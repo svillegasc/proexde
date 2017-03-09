@@ -18,6 +18,7 @@ public class Proveedor {
     private String nombreContacto = null;
     private String email = null;
     private String estado = null;
+    private String mensajeError = null;
 
     public int getIdProveedor() {
         return idProveedor;
@@ -83,5 +84,11 @@ public class Proveedor {
         this.estado = estado;
     }
 
-    
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
+    }    
 }

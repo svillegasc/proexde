@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -28,6 +27,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/insumo")
 public class InsumoREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -84,8 +84,6 @@ public class InsumoREST {
                                  @HeaderParam("ultimaEntrada")String ultimaEntrada,
                                  @HeaderParam("ultimaSalida")String ultimaSalida) throws Exception{
         InsumoDAO dao = new InsumoDAO();
-        Validador validador = new Validador();
-        
         if ( validador.validar_token(token) ){ 
             return dao.insertarInsumo(/*idInsumo,*/nombre,descripcion,precioCompra, unidadMedida,ultimaEntrada,ultimaSalida);    
         }else{
@@ -95,6 +93,7 @@ public class InsumoREST {
     
     /**
      *
+     * @param token
      * @param idInsumo
      * @param nombre
      * @param descripcion
@@ -103,34 +102,49 @@ public class InsumoREST {
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarInsumo(@HeaderParam("idInsumo") int idInsumo, 
+    public String actualizarInsumo(@HeaderParam("token") String token,
+                                   @HeaderParam("idInsumo") int idInsumo, 
                                    @HeaderParam("nombre")String nombre, 
                                    @HeaderParam("descripcion")String descripcion, 
                                    @HeaderParam("precioCompra")int precioCompra,
                                    @HeaderParam("unidadMedida")String unidadMedida,
                                    @HeaderParam("ultimaEntrada")String ultimaEntrada,
-                                   @HeaderParam("ultimaSalida")String ultimaSalida){
+                                   @HeaderParam("ultimaSalida")String ultimaSalida) throws Exception{
         InsumoDAO dao = new InsumoDAO();
-        return dao.actualizarInsumo(idInsumo,nombre,descripcion,precioCompra,
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarInsumo(idInsumo,nombre,descripcion,precioCompra,
                                     unidadMedida,ultimaEntrada,ultimaSalida);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
         
     }
     
     /**
      *
+     * @param token
      * @param idInsumo
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarInsumo(@HeaderParam("idInsumo") int idInsumo){
+    public String eliminarInsumo(@HeaderParam("token") String token,
+                                 @HeaderParam("idInsumo") int idInsumo) throws Exception{
         InsumoDAO dao = new InsumoDAO();
-        return dao.eliminarInsumo(idInsumo);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarInsumo(idInsumo);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }
 

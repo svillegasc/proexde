@@ -21,6 +21,7 @@ public class Insumo {
     private Date ultimaEntrada = null;
     private Date ultimaSalida = null;
     private String estado = null;
+    private String mensajeError = null;
 
     public int getIdInsumo() {
         return idInsumo;
@@ -92,6 +93,14 @@ public class Insumo {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

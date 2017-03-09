@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.EstadoProduccion;
 import co.com.ppi.modelo.EstadoProduccionDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -27,6 +28,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/estadoProduccion")
 public class EstadoProduccionREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,43 +63,67 @@ public class EstadoProduccionREST {
     
     /**
      *
+     * @param token
      * @param descripcion
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarEstadoProduccion(/*@HeaderParam("estadoProduccion") int estadoProduccion,*/
-                                           @HeaderParam("descripcion")String descripcion){
+                                           @HeaderParam("token")String token,
+                                           @HeaderParam("descripcion")String descripcion) throws Exception{
         EstadoProduccionDAO dao = new EstadoProduccionDAO();
-        return dao.insertarEstadoProduccion(/*estadoProduccion,*/descripcion);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarEstadoProduccion(/*estadoProduccion,*/descripcion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param estadoProduccion
      * @param descripcion
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarEstadoProduccion(@HeaderParam("estadoProduccion") int estadoProduccion,
-                                             @HeaderParam("descripcion") String descripcion){
+    public String actualizarEstadoProduccion(@HeaderParam("token")String token,
+                                             @HeaderParam("estadoProduccion") int estadoProduccion,
+                                             @HeaderParam("descripcion") String descripcion) throws Exception{
         EstadoProduccionDAO dao = new EstadoProduccionDAO();
-        return dao.actualizarEstadoProduccion(estadoProduccion,descripcion);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarEstadoProduccion(estadoProduccion,descripcion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param estadoProduccion
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-     public String eliminarEstadoProduccion(@HeaderParam("estadoProduccion") int estadoProduccion){
+     public String eliminarEstadoProduccion(@HeaderParam("token")String token,
+                                            @HeaderParam("estadoProduccion") int estadoProduccion) throws Exception{
         EstadoProduccionDAO dao = new EstadoProduccionDAO();
-        return dao.eliminarEstadoProduccion(estadoProduccion);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarEstadoProduccion(estadoProduccion);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Producto;
 import co.com.ppi.modelo.ProductoDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,7 @@ import javax.ws.rs.HeaderParam;
 @Path("/producto")
 public class ProductoREST {
     
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,56 +62,80 @@ public class ProductoREST {
 
     /**
      *
+     * @param token
      * @param idProducto
      * @param nombre
      * @param descripcion
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarProducto(/*@HeaderParam("idProducto") int idProducto, */
+                                   @HeaderParam("token")String token,
                                    @HeaderParam("nombre") String nombre, 
                                    @HeaderParam("descripcion") String descripcion, 
                                    @HeaderParam("ultimaEntrada") String ultimaEntrada,
-                                   @HeaderParam("ultimaSalida") String ultimaSalida){
+                                   @HeaderParam("ultimaSalida") String ultimaSalida) throws Exception{
         ProductoDAO dao = new ProductoDAO();
-        return dao.insertarProducto(/*idProducto,*/nombre,descripcion,ultimaEntrada,ultimaSalida);
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarProducto(/*idProducto,*/nombre,descripcion,ultimaEntrada,ultimaSalida);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idProducto
      * @param nombre
      * @param descripcion
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarProducto(@HeaderParam("idProducto") int idProducto, 
+    public String actualizarProducto(@HeaderParam("token")String token,
+                                     @HeaderParam("idProducto") int idProducto, 
                                      @HeaderParam("nombre") String nombre, 
                                      @HeaderParam("descripcion") String descripcion,
                                      @HeaderParam("ultimaEntrada") String ultimaEntrada,
-                                     @HeaderParam("ultimaSalida") String ultimaSalida){
+                                     @HeaderParam("ultimaSalida") String ultimaSalida) throws Exception{
         ProductoDAO dao = new ProductoDAO();
-        return dao.actualizarProducto(idProducto,nombre,descripcion,ultimaEntrada,ultimaSalida);
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarProducto(idProducto,nombre,descripcion,ultimaEntrada,ultimaSalida);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idProducto
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarProducto(@HeaderParam("idProducto") int idProducto){
+    public String eliminarProducto(@HeaderParam("token")String token,
+                                   @HeaderParam("idProducto") int idProducto) throws Exception{
         ProductoDAO dao = new ProductoDAO();
-        return dao.eliminarProducto(idProducto);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarProducto(idProducto);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
 }

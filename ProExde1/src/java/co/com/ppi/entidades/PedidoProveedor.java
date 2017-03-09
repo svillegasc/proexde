@@ -17,6 +17,7 @@ public class PedidoProveedor {
     private Date fechaPedido;
     private int estado_produccion = -1;
     private int total;
+    private String mensajeError = null;
 
     public int getIdPedidoProveedor() {
         return idPedidoProveedor;
@@ -56,6 +57,14 @@ public class PedidoProveedor {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
     
     

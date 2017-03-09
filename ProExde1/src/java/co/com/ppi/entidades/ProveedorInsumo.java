@@ -12,6 +12,7 @@ package co.com.ppi.entidades;
 public class ProveedorInsumo {
     private int idInsumo = -1;
     private int idProveedor = -1;
+    private String mensajeError = null;
 
     public int getIdInsumo() {
         return idInsumo;
@@ -29,6 +30,12 @@ public class ProveedorInsumo {
         this.idProveedor = idProveedor;
     }
 
-    
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
+    }
     
 }

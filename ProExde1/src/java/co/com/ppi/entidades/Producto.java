@@ -18,7 +18,8 @@ public class Producto {
     private int stock = -1;
     private Date ultimaEntrada = null;
     private Date ultimaSalida = null;
-    private String estado = null;    
+    private String estado = null;  
+    private String mensajeError = null;
 
     public int getIdProducto() {
         return idProducto;
@@ -74,6 +75,14 @@ public class Producto {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

@@ -17,6 +17,7 @@ public class Cotizacion {
     private int idUsuario = -1;
     private Date fechaCreacion = null;
     private String estado = null;
+    private String mensajeError = null;
 
     public int getIdCotizacion() {
         return idCotizacion;
@@ -48,6 +49,14 @@ public class Cotizacion {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 
     

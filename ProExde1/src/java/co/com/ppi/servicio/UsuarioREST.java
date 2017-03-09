@@ -7,6 +7,7 @@ package co.com.ppi.servicio;
 
 import co.com.ppi.entidades.Usuario;
 import co.com.ppi.modelo.UsuarioDAO;
+import co.com.ppi.util.Validador;
 import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -15,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -27,6 +27,8 @@ import javax.ws.rs.HeaderParam;
 @Path("/usuario")
 public class UsuarioREST {
     
+    
+    Validador validador = new Validador();
     /**
      *
      * @param seleccionar
@@ -61,6 +63,7 @@ public class UsuarioREST {
     
     /**
      *
+     * @param token
      * @param cuenta
      * @param primerNombre
      * @param segundoNombre
@@ -72,11 +75,13 @@ public class UsuarioREST {
      * @param password
      * @param idPerfil
      * @return
+     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarUsuario(/*@HeaderParam("idUsuario") int idUsuario, */
+                                  @HeaderParam("token")String token,
                                   @HeaderParam("cuenta")String cuenta, 
                                   @HeaderParam("primerNombre")String primerNombre, 
                                   @HeaderParam("segundoNombre")String segundoNombre,
@@ -86,15 +91,21 @@ public class UsuarioREST {
                                   @HeaderParam("tipoIdentificacion")int tipoIdentificacion,
                                   @HeaderParam("telefono")String telefono,
                                   @HeaderParam("password")String password,
-                                  @HeaderParam("idPerfil")int idPerfil){
+                                  @HeaderParam("idPerfil")int idPerfil) throws Exception{
         UsuarioDAO dao = new UsuarioDAO();
-        return dao.insertarUsuario(/*idUsuario,*/cuenta,primerNombre,segundoNombre,
+        if ( validador.validar_token(token) ){ 
+            return dao.insertarUsuario(/*idUsuario,*/cuenta,primerNombre,segundoNombre,
                                    primerApellido,segundoApellido,identificacion,
                                    tipoIdentificacion,telefono,password,idPerfil);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idUsuario
      * @param cuenta
      * @param primerNombre
@@ -107,11 +118,13 @@ public class UsuarioREST {
      * @param password
      * @param idPerfil
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
-    public String actualizarUsuario(@HeaderParam("idUsuario") int idUsuario, 
+    public String actualizarUsuario(@HeaderParam("token")String token,
+                                    @HeaderParam("idUsuario") int idUsuario, 
                                     @HeaderParam("cuenta")String cuenta, 
                                     @HeaderParam("primerNombre")String primerNombre, 
                                     @HeaderParam("segundoNombre")String segundoNombre,
@@ -121,24 +134,37 @@ public class UsuarioREST {
                                     @HeaderParam("tipoIdentificacion")int tipoIdentificacion,
                                     @HeaderParam("telefono")String telefono,
                                     @HeaderParam("password")String password,
-                                    @HeaderParam("idPerfil")int idPerfil){
+                                    @HeaderParam("idPerfil")int idPerfil) throws Exception{
         UsuarioDAO dao = new UsuarioDAO();
-        return dao.actualizarUsuario(idUsuario,cuenta,primerNombre,segundoNombre,
+        if ( validador.validar_token(token) ){ 
+            return dao.actualizarUsuario(idUsuario,cuenta,primerNombre,segundoNombre,
                                      primerApellido,segundoApellido,identificacion,
                                      tipoIdentificacion,telefono,password,idPerfil);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
      *
+     * @param token
      * @param idUsuario
      * @return
+     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
-    public String eliminarUsuario(@HeaderParam("idUsuario") int idUsuario){
+    public String eliminarUsuario(@HeaderParam("token")String token,
+                                  @HeaderParam("idUsuario") int idUsuario) throws Exception{
         UsuarioDAO dao = new UsuarioDAO();
-        return dao.eliminarUsuario(idUsuario);
+        if ( validador.validar_token(token) ){ 
+            return dao.eliminarUsuario(idUsuario);
+        }else{
+            return validador.getMensajeToken();
+        }
+        
     }
     
     /**
@@ -146,6 +172,7 @@ public class UsuarioREST {
      * @param cuenta
      * @param password
      * @return
+     * @throws java.lang.Exception
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
