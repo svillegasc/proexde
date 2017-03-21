@@ -247,6 +247,8 @@ public class CotizacionDAO {
     public String actualizarCotizacion(int idCotizacion,int idUsuario,String fechaCrea)
     {
       String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = ? AND ESTADO='A'";
+      String sql="UPDATE COTIZACION SET ID_USUARIO='"+idUsuario+"', FECHA_CREACION=TO_DATE('"+fechaCreacion+"','yyyy-mm-dd') "
+                  + "WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'"; 
         try
         {
             
@@ -280,10 +282,10 @@ public class CotizacionDAO {
                         return "Fecha no válida";
                     }
                     
-                    String sql="UPDATE COTIZACION SET ID_USUARIO='"+idUsuario+"', FECHA_CREACION=TO_DATE('"+fechaCreacion+"','yyyy-mm-dd') "
-                        + "WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";         
+                            
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setString(1, idCotizacion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
@@ -311,17 +313,20 @@ public class CotizacionDAO {
     
     public String eliminarCotizacion(int idCotizacion)
     {
+      String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";
+      String sql="UPDATE COTIZACIONS SET ESTADO='I' WHERE ID_COTIZACION = '"+idCotizacion+"'";
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setString(1, idCotizacion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE COTIZACIONS SET ESTADO='I' WHERE ID_COTIZACION = '"+idCotizacion+"'";
+                    
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setString(1, idCotizacion);
                     pr.executeUpdate(); 
                 }else{
                     return "0 filas encontradas";
