@@ -199,7 +199,7 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-            throw new RuntimeException(e);
+            throw new RuntimeException(ex);
            }
        }
         return result;
@@ -238,7 +238,7 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-              throw new RuntimeException(e);
+              throw new RuntimeException(ex);
            }
        }
         return result;
@@ -303,7 +303,7 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-              throw new RuntimeException(e);
+              throw new RuntimeException(ex);
            }
        }    
         return "Se actualizo correctamente";
@@ -341,7 +341,7 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-              throw new RuntimeException(e);
+              throw new RuntimeException(ex);
            }
        }    
         return "Se elimino correctamente";
