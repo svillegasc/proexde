@@ -36,7 +36,7 @@ public class CotizacionDAO {
         java.sql.Date fechaCreacion;
         try
         {
-            if(fechaCrea.equals("") || fechaCrea == null){
+            if( fechaCrea == null || fechaCrea.equals("")){
                 return "Falta la fecha de creación.";
             }
             try{
@@ -80,15 +80,15 @@ public class CotizacionDAO {
         return "Se inserto correctamente";
     }
     
-    public List<Cotizacion> consultarCotizaciones(String sel, String cam, String val, String ord)
+    public ArrayList<Cotizacion> consultarCotizaciones(String sel, String cam, String val, String ord)
     {
         ArrayList<Cotizacion> result = new ArrayList<> ();
         Cotizacion producto = new Cotizacion();
         
-        String seleccionar = !sel.trim().equals("") ? sel : "" && sel != null;
-        String[] campos = !cam.trim().equals("") ? cam.split(",") : null && cam != null;
-        String[] valores = !val.trim().equals("") ? val.split(",") : null && val != null;
-        String orden = !ord.trim().equals("") ? ord : "" && ord != null;
+        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
+        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
+        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
+        String orden = ord != null && !ord.trim().equals("") ? ord : "";
         
         try
         {
@@ -96,7 +96,7 @@ public class CotizacionDAO {
            StringBuilder sql = new StringBuilder();
            
            
-           if(!seleccionar.equals("") ){
+           if( !seleccionar.equals("") ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM COTIZACION ");
@@ -189,6 +189,7 @@ public class CotizacionDAO {
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             producto.setIdCotizacion(-1);
             producto.setIdUsuario(-1);
+//               producto.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
             result.add(producto);
             return result;
         }
@@ -203,7 +204,7 @@ public class CotizacionDAO {
         return result;
     }
     
-    public List<Cotizacion> consultarCotizacion(int id_Cotizacion)
+    public ArrayList<Cotizacion> consultarCotizacion(int id_Cotizacion)
     {
         String sql="SELECT ID_USUARIO,FECHA_CREACION "
                    + "FROM COTIZACION WHERE ID_COTIZACION='"+id_Cotizacion+"' AND ESTADO='A'";
