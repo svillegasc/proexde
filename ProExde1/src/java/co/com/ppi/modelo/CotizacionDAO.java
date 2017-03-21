@@ -36,7 +36,7 @@ public class CotizacionDAO {
         java.sql.Date fechaCreacion;
         try
         {
-            if( fechaCrea == null || fechaCrea.equals("")){
+            if( fechaCrea == null || "".equals(fechaCrea)){
                 return "Falta la fecha de creación.";
             }
             try{
@@ -198,7 +198,9 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(Exception ex){
+            throw new RuntimeException(e);
+           }
        }
         return result;
     }
@@ -235,7 +237,9 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(Exception ex){
+              throw new RuntimeException(e);
+           }
        }
         return result;
     }
@@ -255,7 +259,7 @@ public class CotizacionDAO {
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     
-                    if( fechaCrea == null || fechaCrea.equals("")){
+                    if( fechaCrea == null || "".equals(fechaCrea)){
                         return "Falta la fecha de creación.";
                     }
 
@@ -298,7 +302,9 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(Exception ex){
+              throw new RuntimeException(e);
+           }
        }    
         return "Se actualizo correctamente";
     }
@@ -334,7 +340,9 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(Exception ex){
+              throw new RuntimeException(e);
+           }
        }    
         return "Se elimino correctamente";
     }
