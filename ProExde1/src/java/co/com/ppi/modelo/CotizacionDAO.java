@@ -86,9 +86,9 @@ public class CotizacionDAO {
         Cotizacion producto = new Cotizacion();
         
         String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
@@ -96,7 +96,7 @@ public class CotizacionDAO {
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM COTIZACION ");
@@ -160,23 +160,23 @@ public class CotizacionDAO {
            {    
                Cotizacion c = new Cotizacion();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    c.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                    c.setIdUsuario(rs.getInt("ID_USUARIO"));
                    c.setFechaCreacion(rs.getDate("FECHA_CREACION"));
                    c.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].equalsIgnoreCase().equals("ID_COTIZACION")){
+                        if("ID_COTIZACION".equalsIgnoreCase().equals(select[j])){
                             c.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }  
-                        if(select[j].equalsIgnoreCase().equals("ID_USUARIO")){
+                        if("ID_USUARIO".equalsIgnoreCase().equals(select[j])){
                             c.setIdUsuario(rs.getInt("ID_USUARIO"));
                         }
-                        if(select[j].equalsIgnoreCase().equals("FECHA_CREACION")){
+                        if("FECHA_CREACION".equalsIgnoreCase().equals(select[j])){
                             c.setFechaCreacion(rs.getDate("FECHA_CREACION"));
                         }
-                        if(select[j].equalsIgnoreCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase().equals(select[j])){
                             c.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -189,7 +189,6 @@ public class CotizacionDAO {
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             producto.setIdCotizacion(-1);
             producto.setIdUsuario(-1);
-//               producto.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
             result.add(producto);
             return result;
         }
