@@ -199,7 +199,8 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-            throw new RuntimeException(ex);
+            Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return ex.getMessage();
            }
        }
         return result;
@@ -238,7 +239,8 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-              throw new RuntimeException(ex);
+              Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
+              return ex.getMessage();
            }
        }
         return result;
@@ -303,7 +305,8 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-              throw new RuntimeException(ex);
+              Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
+              return ex.getMessage();
            }
        }    
         return "Se actualizo correctamente";
@@ -341,7 +344,8 @@ public class CotizacionDAO {
                con.close();
            }
            catch(Exception ex){
-              throw new RuntimeException(ex);
+              Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
+              return ex.getMessage();
            }
        }    
         return "Se elimino correctamente";
