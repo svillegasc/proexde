@@ -85,7 +85,7 @@ public class CotizacionDAO {
         ArrayList<Cotizacion> result = new ArrayList<> ();
         Cotizacion producto = new Cotizacion();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
         String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
         String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
         String orden = ord != null && !ord.trim().equals("") ? ord : "";
