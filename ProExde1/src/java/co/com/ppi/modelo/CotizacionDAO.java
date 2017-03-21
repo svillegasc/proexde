@@ -200,7 +200,6 @@ public class CotizacionDAO {
            }
            catch(Exception ex){
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return ex.getMessage();
            }
        }
         return result;
@@ -240,7 +239,6 @@ public class CotizacionDAO {
            }
            catch(Exception ex){
               Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
-              return ex.getMessage();
            }
        }
         return result;
@@ -306,7 +304,6 @@ public class CotizacionDAO {
            }
            catch(Exception ex){
               Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
-              return ex.getMessage();
            }
        }    
         return "Se actualizo correctamente";
@@ -345,7 +342,6 @@ public class CotizacionDAO {
            }
            catch(Exception ex){
               Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
-              return ex.getMessage();
            }
        }    
         return "Se elimino correctamente";
