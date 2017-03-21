@@ -114,7 +114,7 @@ public class CotizacionDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_COTIZACION") || campos[i].equals("ESTADO")){
+                            if ("ID_COTIZACION".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -242,13 +242,15 @@ public class CotizacionDAO {
     
     public String actualizarCotizacion(int idCotizacion,int idUsuario,String fechaCrea)
     {
+      String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = ? AND ESTADO='A'";
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";
+            
             Date fechaCreacionC;
             java.sql.Date fechaCreacion;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setString(1, idCotizacion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
