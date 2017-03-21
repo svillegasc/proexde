@@ -1,0 +1,5 @@
+projectKey=proexde
+serverUrl=http://localhost:9000/sonar
+dashboardUrl=http://localhost:9000/sonar/dashboard/index/proexde
+ceTaskId=AVrNwesXKNc4vk14jU1i
+ceTaskUrl=http://localhost:9000/sonar/api/ce/task?id=AVrNwesXKNc4vk14jU1i

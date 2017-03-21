@@ -36,7 +36,7 @@ public class CotizacionDAO {
         java.sql.Date fechaCreacion;
         try
         {
-            if( fechaCrea == null || fechaCrea.equals("")){
+            if(fechaCrea.equals("") || fechaCrea == null){
                 return "Falta la fecha de creación.";
             }
             try{
@@ -80,31 +80,29 @@ public class CotizacionDAO {
         return "Se inserto correctamente";
     }
     
-    public ArrayList<Cotizacion> consultarCotizaciones(String sel, String cam, String val, String ord)
+    public List<Cotizacion> consultarCotizaciones(String sel, String cam, String val, String ord)
     {
         ArrayList<Cotizacion> result = new ArrayList<> ();
         Cotizacion producto = new Cotizacion();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = !sel.trim().equals("") ? sel : "" && sel != null;
+        String[] campos = !cam.trim().equals("") ? cam.split(",") : null && cam != null;
+        String[] valores = !val.trim().equals("") ? val.split(",") : null && val != null;
+        String orden = !ord.trim().equals("") ? ord : "" && ord != null;
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT IDCOTIZACION,NOMBRE,DESCRIPCION,UNIDADMEDIDA FROM COTIZACIONS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if(!seleccionar.equals("") ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM COTIZACION ");
            }else{
                producto.setIdCotizacion(-1);
                producto.setIdUsuario(-1);
-//               producto.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                result.add(producto);
                return result;
            }
@@ -137,7 +135,6 @@ public class CotizacionDAO {
                }else{
                     producto.setIdCotizacion(-1);
                     producto.setIdUsuario(-1);
-//               producto.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                     result.add(producto);
                     return result;
                 }        
@@ -145,7 +142,6 @@ public class CotizacionDAO {
            if( (campos != null && valores == null) || (campos == null && valores != null) ){
                 producto.setIdCotizacion(-1);
                 producto.setIdUsuario(-1);
-//               producto.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                 result.add(producto);
                 return result;  
            }
@@ -171,16 +167,16 @@ public class CotizacionDAO {
                    c.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_COTIZACION")){
+                        if(select[j].equalsIgnoreCase().equals("ID_COTIZACION")){
                             c.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_USUARIO")){
+                        if(select[j].equalsIgnoreCase().equals("ID_USUARIO")){
                             c.setIdUsuario(rs.getInt("ID_USUARIO"));
                         }
-                        if(select[j].toUpperCase().equals("FECHA_CREACION")){
+                        if(select[j].equalsIgnoreCase().equals("FECHA_CREACION")){
                             c.setFechaCreacion(rs.getDate("FECHA_CREACION"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if(select[j].equalsIgnoreCase().equals("ESTADO")){
                             c.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -193,7 +189,6 @@ public class CotizacionDAO {
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             producto.setIdCotizacion(-1);
             producto.setIdUsuario(-1);
-//               producto.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
             result.add(producto);
             return result;
         }
@@ -208,7 +203,7 @@ public class CotizacionDAO {
         return result;
     }
     
-    public ArrayList<Cotizacion> consultarCotizacion(int id_Cotizacion)
+    public List<Cotizacion> consultarCotizacion(int id_Cotizacion)
     {
         String sql="SELECT ID_USUARIO,FECHA_CREACION "
                    + "FROM COTIZACION WHERE ID_COTIZACION='"+id_Cotizacion+"' AND ESTADO='A'";
@@ -250,7 +245,7 @@ public class CotizacionDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";
-            Date fechaCreacionC = null;
+            Date fechaCreacionC;
             java.sql.Date fechaCreacion;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
