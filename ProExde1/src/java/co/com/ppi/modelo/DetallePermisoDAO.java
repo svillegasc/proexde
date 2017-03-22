@@ -215,7 +215,7 @@ public class DetallePermisoDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(DetallePermisoDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -225,7 +225,7 @@ public class DetallePermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(DetallePermisoDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }

@@ -306,7 +306,7 @@ public class InsumoDAO {
                                    String ultimaEnt,String ultimaSal){
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = '"+idInsumo+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = ? AND ESTADO='A'";
             Date ultimaEntradaA;
             Date ultimaSalidaA;
             java.sql.Date ultimaEntrada;
