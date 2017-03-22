@@ -16,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -70,7 +69,6 @@ public class PedidoREST {
      * @param fechaTerminacion
      * @param estadoProduccion
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -81,7 +79,7 @@ public class PedidoREST {
                                  @HeaderParam("fechaPedido")String fechaPedido,
                                  @HeaderParam("fechaInicio")String fechaInicio,
                                  @HeaderParam("fechaTerminacion")String fechaTerminacion,
-                                 @HeaderParam("estadoProduccion")int estadoProduccion) throws Exception{
+                                 @HeaderParam("estadoProduccion")int estadoProduccion){
         PedidoDAO dao = new PedidoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarPedido(/*idPedido,*/idCotizacion,fechaPedido,
@@ -103,7 +101,6 @@ public class PedidoREST {
      * @param fechaTerminacion
      * @param estadoProduccion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -115,7 +112,7 @@ public class PedidoREST {
                                    @HeaderParam("cantidadProducida")int cantidadProducida,
                                    @HeaderParam("fechaInicio")String fechaInicio,
                                    @HeaderParam("fechaTerminacion")String fechaTerminacion,
-                                   @HeaderParam("estadoProduccion")int estadoProduccion) throws Exception{
+                                   @HeaderParam("estadoProduccion")int estadoProduccion){
         PedidoDAO dao = new PedidoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarPedido(idPedido,idCotizacion,fechaPedido,cantidadProducida,

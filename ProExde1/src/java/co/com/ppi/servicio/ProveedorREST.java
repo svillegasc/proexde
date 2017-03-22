@@ -16,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 /**
@@ -63,7 +62,6 @@ public class ProveedorREST {
     /**
      *
      * @param token
-     * @param idProveedor
      * @param nombreEmpresa
      * @param nit
      * @param direccion
@@ -71,7 +69,6 @@ public class ProveedorREST {
      * @param nombreContacto
      * @param email
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -83,7 +80,7 @@ public class ProveedorREST {
                                     @HeaderParam("direccion")String direccion,
                                     @HeaderParam("telefono")String telefono,
                                     @HeaderParam("nombreContacto")String nombreContacto,
-                                    @HeaderParam("email")String email) throws Exception{
+                                    @HeaderParam("email")String email){
         ProveedorDAO dao = new ProveedorDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarProveedor(/*idProveedor,*/nombreEmpresa,nit,direccion,
@@ -104,7 +101,6 @@ public class ProveedorREST {
      * @param nombreContacto
      * @param email
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -116,7 +112,7 @@ public class ProveedorREST {
                                       @HeaderParam("direccion")String direccion,
                                       @HeaderParam("telefono")String telefono,
                                       @HeaderParam("nombreContacto")String nombreContacto,
-                                      @HeaderParam("email")String email) throws Exception{
+                                      @HeaderParam("email")String email){
         ProveedorDAO dao = new ProveedorDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarProveedor(idProveedor,nombreEmpresa,nit,direccion,
@@ -131,13 +127,12 @@ public class ProveedorREST {
      * @param token
      * @param idProveedor
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarProveedor(@HeaderParam("token")String token,
-                                    @HeaderParam("idProveedor") int idProveedor) throws Exception{
+                                    @HeaderParam("idProveedor") int idProveedor){
         ProveedorDAO dao = new ProveedorDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarProveedor(idProveedor);

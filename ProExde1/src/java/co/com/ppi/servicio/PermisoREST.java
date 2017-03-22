@@ -16,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -66,14 +65,13 @@ public class PermisoREST {
      * @param token
      * @param descripcion
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarPermiso(/*@HeaderParam("idPermiso") int idPermiso,*/
                                   @HeaderParam("token")String token,
-                                  @HeaderParam("descripcion")String descripcion) throws Exception{
+                                  @HeaderParam("descripcion")String descripcion){
         PermisoDAO dao = new PermisoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarPermiso(/*idPermiso,*/descripcion);
@@ -89,14 +87,13 @@ public class PermisoREST {
      * @param idPermiso
      * @param descripcion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
     public String actualizarPermiso(@HeaderParam("token")String token,
                                     @HeaderParam("idPermiso") int idPermiso,
-                                    @HeaderParam("descripcion") String descripcion) throws Exception{
+                                    @HeaderParam("descripcion") String descripcion){
         PermisoDAO dao = new PermisoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarPermiso(idPermiso,descripcion);
@@ -111,13 +108,12 @@ public class PermisoREST {
      * @param token
      * @param idPermiso
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarPermiso(@HeaderParam("token")String token,
-                                  @HeaderParam("idPermiso") int idPermiso) throws Exception{
+                                  @HeaderParam("idPermiso") int idPermiso){
         PermisoDAO dao = new PermisoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarPermiso(idPermiso);

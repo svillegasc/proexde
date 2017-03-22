@@ -75,7 +75,7 @@ public class DetallePermisoREST {
     @Path("/insertar")
     public String insertarDetallePermiso(@HeaderParam("token")String token,
                                          @HeaderParam("idPermiso") int idPermiso, 
-                                         @HeaderParam("idPerfil") int idPerfil) throws Exception{
+                                         @HeaderParam("idPerfil") int idPerfil){
         DetallePermisoDAO dao = new DetallePermisoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarDetallePermiso(idPermiso,idPerfil);
@@ -98,7 +98,7 @@ public class DetallePermisoREST {
     @Path("/eliminar")
     public String eliminarDetallePermiso(@HeaderParam("token")String token,
                                          @HeaderParam("idPermiso") int idPermiso,
-                                         @HeaderParam("idPerfil") int idPerfil) throws Exception{
+                                         @HeaderParam("idPerfil") int idPerfil){
         DetallePermisoDAO dao = new DetallePermisoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarDetallePermiso(idPermiso,idPerfil);

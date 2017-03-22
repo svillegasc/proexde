@@ -77,7 +77,7 @@ public class DetalleCotizacionClienteREST {
     public String insertarDetalleCotizacionCliente(@HeaderParam("token")String token,
                                                    @HeaderParam("idCotizacion") int idCotizacion, 
                                                    @HeaderParam("idProducto") int idProducto,
-                                                   @HeaderParam("precio") int precio) throws Exception{
+                                                   @HeaderParam("precio") int precio){
         DetalleCotizacionClienteDAO dao = new DetalleCotizacionClienteDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarDetalleCotizacionCliente(idCotizacion,idProducto,precio);
@@ -102,7 +102,7 @@ public class DetalleCotizacionClienteREST {
     public String actualizarDetalleCotizacionCliente(@HeaderParam("token")String token,
                                                      @HeaderParam("idCotizacion") int idCotizacion, 
                                                      @HeaderParam("idProducto") int idProducto,
-                                                     @HeaderParam("precio") int precio) throws Exception{
+                                                     @HeaderParam("precio") int precio){
         DetalleCotizacionClienteDAO dao = new DetalleCotizacionClienteDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarDetalleCotizacionCliente(idCotizacion,idProducto,precio);

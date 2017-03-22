@@ -70,7 +70,6 @@ public class InsumoREST {
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -82,7 +81,7 @@ public class InsumoREST {
                                  @HeaderParam("precioCompra")int precioCompra,
                                  @HeaderParam("unidadMedida")String unidadMedida,
                                  @HeaderParam("ultimaEntrada")String ultimaEntrada,
-                                 @HeaderParam("ultimaSalida")String ultimaSalida) throws Exception{
+                                 @HeaderParam("ultimaSalida")String ultimaSalida){
         InsumoDAO dao = new InsumoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarInsumo(/*idInsumo,*/nombre,descripcion,precioCompra, unidadMedida,ultimaEntrada,ultimaSalida);    
@@ -102,7 +101,6 @@ public class InsumoREST {
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -114,7 +112,7 @@ public class InsumoREST {
                                    @HeaderParam("precioCompra")int precioCompra,
                                    @HeaderParam("unidadMedida")String unidadMedida,
                                    @HeaderParam("ultimaEntrada")String ultimaEntrada,
-                                   @HeaderParam("ultimaSalida")String ultimaSalida) throws Exception{
+                                   @HeaderParam("ultimaSalida")String ultimaSalida){
         InsumoDAO dao = new InsumoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarInsumo(idInsumo,nombre,descripcion,precioCompra,
@@ -131,13 +129,12 @@ public class InsumoREST {
      * @param token
      * @param idInsumo
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarInsumo(@HeaderParam("token") String token,
-                                 @HeaderParam("idInsumo") int idInsumo) throws Exception{
+                                 @HeaderParam("idInsumo") int idInsumo){
         InsumoDAO dao = new InsumoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarInsumo(idInsumo);

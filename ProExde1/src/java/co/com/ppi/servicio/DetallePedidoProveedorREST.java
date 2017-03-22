@@ -70,7 +70,6 @@ public class DetallePedidoProveedorREST {
      * @param cantidad
      * @param precio
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +78,7 @@ public class DetallePedidoProveedorREST {
                                                  @HeaderParam("idPedidoProveedor")int idPedidoProveedor,
                                                  @HeaderParam("idInsumo")int idInsumo,
                                                  @HeaderParam("cantidad") int cantidad,
-                                                 @HeaderParam("precio") int precio) throws Exception{
+                                                 @HeaderParam("precio") int precio){
         DetallePedidoProveedorDAO dao = new DetallePedidoProveedorDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarDetallePedidoProveedor(idPedidoProveedor,idInsumo,cantidad,precio);
@@ -97,7 +96,6 @@ public class DetallePedidoProveedorREST {
      * @param cantidad
      * @param precio
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -106,7 +104,7 @@ public class DetallePedidoProveedorREST {
                                                    @HeaderParam("idPedidoProveedor")int idPedidoProveedor,
                                                    @HeaderParam("idInsumo")int idInsumo,
                                                    @HeaderParam("cantidad") int cantidad,
-                                                   @HeaderParam("precio") int precio) throws Exception{
+                                                   @HeaderParam("precio") int precio){
         DetallePedidoProveedorDAO dao = new DetallePedidoProveedorDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarDetallePedidoProveedor(idPedidoProveedor,idInsumo,cantidad,precio);

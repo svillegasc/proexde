@@ -63,13 +63,11 @@ public class ProductoREST {
     /**
      *
      * @param token
-     * @param idProducto
      * @param nombre
      * @param descripcion
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +77,7 @@ public class ProductoREST {
                                    @HeaderParam("nombre") String nombre, 
                                    @HeaderParam("descripcion") String descripcion, 
                                    @HeaderParam("ultimaEntrada") String ultimaEntrada,
-                                   @HeaderParam("ultimaSalida") String ultimaSalida) throws Exception{
+                                   @HeaderParam("ultimaSalida") String ultimaSalida){
         ProductoDAO dao = new ProductoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarProducto(/*idProducto,*/nombre,descripcion,ultimaEntrada,ultimaSalida);
@@ -98,7 +96,6 @@ public class ProductoREST {
      * @param ultimaEntrada
      * @param ultimaSalida
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -108,7 +105,7 @@ public class ProductoREST {
                                      @HeaderParam("nombre") String nombre, 
                                      @HeaderParam("descripcion") String descripcion,
                                      @HeaderParam("ultimaEntrada") String ultimaEntrada,
-                                     @HeaderParam("ultimaSalida") String ultimaSalida) throws Exception{
+                                     @HeaderParam("ultimaSalida") String ultimaSalida){
         ProductoDAO dao = new ProductoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarProducto(idProducto,nombre,descripcion,ultimaEntrada,ultimaSalida);
@@ -123,13 +120,12 @@ public class ProductoREST {
      * @param token
      * @param idProducto
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarProducto(@HeaderParam("token")String token,
-                                   @HeaderParam("idProducto") int idProducto) throws Exception{
+                                   @HeaderParam("idProducto") int idProducto){
         ProductoDAO dao = new ProductoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarProducto(idProducto);

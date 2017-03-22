@@ -67,14 +67,13 @@ public class TipoIdentificacionREST {
      * @param token
      * @param descripcion
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarTipoIdentificacion(/*@HeaderParam("tipoIdentificacion") String tipoIdentificacion,*/
                                              @HeaderParam("token")String token,
-                                             @HeaderParam("descripcion")String descripcion) throws Exception{
+                                             @HeaderParam("descripcion")String descripcion){
         TipoIdentificacionDAO dao = new TipoIdentificacionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarTipoIdentificacion(/*tipoIdentificacion,*/descripcion);
@@ -90,14 +89,13 @@ public class TipoIdentificacionREST {
      * @param tipoIdentificacion
      * @param descripcion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
     public String actualizarTipoIdentificacion(@HeaderParam("token")String token,
                                                @HeaderParam("tipoIdentificacion") int tipoIdentificacion,
-                                               @HeaderParam("descripcion") String descripcion) throws Exception{
+                                               @HeaderParam("descripcion") String descripcion){
         TipoIdentificacionDAO dao = new TipoIdentificacionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarTipoIdentificacion(tipoIdentificacion,descripcion);
@@ -112,13 +110,12 @@ public class TipoIdentificacionREST {
      * @param token
      * @param tipoIdentificacion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarTipoIdentificacion(@HeaderParam("token")String token,
-                                             @HeaderParam("tipoIdentificacion") int tipoIdentificacion) throws Exception{
+                                             @HeaderParam("tipoIdentificacion") int tipoIdentificacion){
         TipoIdentificacionDAO dao = new TipoIdentificacionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarTipoIdentificacion(tipoIdentificacion);

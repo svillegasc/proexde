@@ -77,7 +77,7 @@ public class ProveedorInsumoREST {
     @Path("/insertar")
     public String insertarProveedorInsumo(@HeaderParam("token")String token,
                                           @HeaderParam("idProveedor") int idProveedor, 
-                                          @HeaderParam("idInsumo") int idInsumo) throws Exception{
+                                          @HeaderParam("idInsumo") int idInsumo){
         ProveedorInsumoDAO dao = new ProveedorInsumoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarProveedorInsumo(idProveedor,idInsumo);
@@ -100,7 +100,7 @@ public class ProveedorInsumoREST {
     @Path("/eliminar")
     public String eliminarProveedorInsumo(@HeaderParam("token")String token,
                                           @HeaderParam("idProveedor") int idProveedor,
-                                          @HeaderParam("idInsumo") int idInsumo) throws Exception{
+                                          @HeaderParam("idInsumo") int idInsumo){
         ProveedorInsumoDAO dao = new ProveedorInsumoDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarProveedorInsumo(idProveedor,idInsumo);

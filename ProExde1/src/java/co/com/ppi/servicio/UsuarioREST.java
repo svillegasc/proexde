@@ -75,7 +75,6 @@ public class UsuarioREST {
      * @param password
      * @param idPerfil
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,7 +90,7 @@ public class UsuarioREST {
                                   @HeaderParam("tipoIdentificacion")int tipoIdentificacion,
                                   @HeaderParam("telefono")String telefono,
                                   @HeaderParam("password")String password,
-                                  @HeaderParam("idPerfil")int idPerfil) throws Exception{
+                                  @HeaderParam("idPerfil")int idPerfil){
         UsuarioDAO dao = new UsuarioDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarUsuario(/*idUsuario,*/cuenta,primerNombre,segundoNombre,
@@ -118,7 +117,6 @@ public class UsuarioREST {
      * @param password
      * @param idPerfil
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -134,7 +132,7 @@ public class UsuarioREST {
                                     @HeaderParam("tipoIdentificacion")int tipoIdentificacion,
                                     @HeaderParam("telefono")String telefono,
                                     @HeaderParam("password")String password,
-                                    @HeaderParam("idPerfil")int idPerfil) throws Exception{
+                                    @HeaderParam("idPerfil")int idPerfil){
         UsuarioDAO dao = new UsuarioDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarUsuario(idUsuario,cuenta,primerNombre,segundoNombre,
@@ -151,13 +149,12 @@ public class UsuarioREST {
      * @param token
      * @param idUsuario
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarUsuario(@HeaderParam("token")String token,
-                                  @HeaderParam("idUsuario") int idUsuario) throws Exception{
+                                  @HeaderParam("idUsuario") int idUsuario){
         UsuarioDAO dao = new UsuarioDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarUsuario(idUsuario);
@@ -172,13 +169,12 @@ public class UsuarioREST {
      * @param cuenta
      * @param password
      * @return
-     * @throws java.lang.Exception
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
     public String logueoUsuario(@HeaderParam("cuenta") String cuenta,
-                                @HeaderParam("password") String password) throws Exception{
+                                @HeaderParam("password") String password){
         UsuarioDAO dao = new UsuarioDAO();
         return dao.logueoUsuario(cuenta,password);
     }

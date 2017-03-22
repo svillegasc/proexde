@@ -16,7 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.HeaderParam;
 
@@ -66,14 +65,13 @@ public class EstadoProduccionREST {
      * @param token
      * @param descripcion
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarEstadoProduccion(/*@HeaderParam("estadoProduccion") int estadoProduccion,*/
                                            @HeaderParam("token")String token,
-                                           @HeaderParam("descripcion")String descripcion) throws Exception{
+                                           @HeaderParam("descripcion")String descripcion){
         EstadoProduccionDAO dao = new EstadoProduccionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarEstadoProduccion(/*estadoProduccion,*/descripcion);
@@ -89,14 +87,13 @@ public class EstadoProduccionREST {
      * @param estadoProduccion
      * @param descripcion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
     public String actualizarEstadoProduccion(@HeaderParam("token")String token,
                                              @HeaderParam("estadoProduccion") int estadoProduccion,
-                                             @HeaderParam("descripcion") String descripcion) throws Exception{
+                                             @HeaderParam("descripcion") String descripcion){
         EstadoProduccionDAO dao = new EstadoProduccionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarEstadoProduccion(estadoProduccion,descripcion);

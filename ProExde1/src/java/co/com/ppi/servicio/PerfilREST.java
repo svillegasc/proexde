@@ -65,14 +65,13 @@ public class PerfilREST {
      * @param token
      * @param nombre
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/insertar")
     public String insertarPerfil(/*@HeaderParam("idPerfil") int idPerfil,*/
                                  @HeaderParam("token")String token,
-                                 @HeaderParam("nombre")String nombre) throws Exception{
+                                 @HeaderParam("nombre")String nombre){
         PerfilDAO dao = new PerfilDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarPerfil(/*idPerfil,*/nombre);
@@ -88,14 +87,13 @@ public class PerfilREST {
      * @param idPerfil
      * @param nombre
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/actualizar")
     public String actualizarPerfil(@HeaderParam("token")String token,
                                    @HeaderParam("idPerfil") int idPerfil,
-                                   @HeaderParam("nombre") String nombre) throws Exception{
+                                   @HeaderParam("nombre") String nombre){
         PerfilDAO dao = new PerfilDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarPerfil(idPerfil,nombre);
@@ -110,13 +108,12 @@ public class PerfilREST {
      * @param token
      * @param idPerfil
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarPerfil(@HeaderParam("token")String token,
-                                 @HeaderParam("idPerfil") int idPerfil) throws Exception{
+                                 @HeaderParam("idPerfil") int idPerfil){
         PerfilDAO dao = new PerfilDAO();
         if ( validador.validar_token(token) ){ 
            return dao.eliminarPerfil(idPerfil); 

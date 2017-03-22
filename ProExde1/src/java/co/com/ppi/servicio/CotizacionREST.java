@@ -66,7 +66,6 @@ public class CotizacionREST {
      * @param idUsuario
      * @param fechaCreacion
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,7 +73,7 @@ public class CotizacionREST {
     public String insertarCotizacion(/*@HeaderParam("idCotizacion") int idCotizacion, */
                                      @HeaderParam("token")String token,
                                      @HeaderParam("idUsuario")int idUsuario,
-                                     @HeaderParam("fechaCreacion")String fechaCreacion) throws Exception{
+                                     @HeaderParam("fechaCreacion")String fechaCreacion){
         CotizacionDAO dao = new CotizacionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarCotizacion(/*idCotizacion,*/idUsuario,fechaCreacion);
@@ -98,7 +97,7 @@ public class CotizacionREST {
     public String actualizarCotizacion(@HeaderParam("token")String token,
                                        @HeaderParam("idCotizacion") int idCotizacion,
                                        @HeaderParam("idUsuario")int idUsuario,
-                                       @HeaderParam("fechaCreacion")String fechaCreacion) throws Exception{
+                                       @HeaderParam("fechaCreacion")String fechaCreacion){
         CotizacionDAO dao = new CotizacionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarCotizacion(idCotizacion,idUsuario,fechaCreacion);
@@ -113,13 +112,12 @@ public class CotizacionREST {
      * @param token
      * @param idCotizacion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarCotizacion(@HeaderParam("token")String token,
-                                     @HeaderParam("idCotizacion") int idCotizacion) throws Exception{
+                                     @HeaderParam("idCotizacion") int idCotizacion){
         CotizacionDAO dao = new CotizacionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarCotizacion(idCotizacion);

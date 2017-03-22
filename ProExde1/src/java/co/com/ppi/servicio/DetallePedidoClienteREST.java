@@ -69,7 +69,6 @@ public class DetallePedidoClienteREST {
      * @param idProducto
      * @param cantidadPedida
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -77,7 +76,7 @@ public class DetallePedidoClienteREST {
     public String insertarDetallePedidoCliente(@HeaderParam("token")String token,
                                                @HeaderParam("idPedido") int idPedido, 
                                                @HeaderParam("idProducto") int idProducto,
-                                               @HeaderParam("cantidadPedida") int cantidadPedida) throws Exception{
+                                               @HeaderParam("cantidadPedida") int cantidadPedida){
         DetallePedidoClienteDAO dao = new DetallePedidoClienteDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarDetallePedidoCliente(idPedido,idProducto,cantidadPedida);
@@ -94,7 +93,6 @@ public class DetallePedidoClienteREST {
      * @param idProducto
      * @param cantidadPedida
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -102,7 +100,7 @@ public class DetallePedidoClienteREST {
     public String actualizarDetallePedidoCliente(@HeaderParam("token")String token,
                                                  @HeaderParam("idPedido") int idPedido, 
                                                  @HeaderParam("idProducto") int idProducto,
-                                                 @HeaderParam("cantidadPedida") int cantidadPedida) throws Exception{
+                                                 @HeaderParam("cantidadPedida") int cantidadPedida){
         DetallePedidoClienteDAO dao = new DetallePedidoClienteDAO();
         if ( validador.validar_token(token) ){ 
             return dao.actualizarDetallePedidoCliente(idPedido,idProducto,cantidadPedida);

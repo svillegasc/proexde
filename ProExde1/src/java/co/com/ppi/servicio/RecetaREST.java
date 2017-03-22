@@ -70,7 +70,6 @@ public class RecetaREST {
      * @param idInsumo
      * @param cantidadUtilizada
      * @return
-     * @throws java.lang.Exception
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -78,7 +77,7 @@ public class RecetaREST {
     public String insertarReceta(@HeaderParam("token")String token,
                                  @HeaderParam("idProducto") int idProducto, 
                                  @HeaderParam("idInsumo") int idInsumo, 
-                                 @HeaderParam("cantidadUtilizada") int cantidadUtilizada) throws Exception{
+                                 @HeaderParam("cantidadUtilizada") int cantidadUtilizada){
         RecetaDAO dao = new RecetaDAO();
         if ( validador.validar_token(token) ){ 
             return dao.insertarReceta(idProducto,idInsumo,cantidadUtilizada);
@@ -95,7 +94,6 @@ public class RecetaREST {
      * @param idInsumo
      * @param cantidadUtilizada
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -103,7 +101,7 @@ public class RecetaREST {
     public String actualizarReceta(@HeaderParam("token")String token,
                                    @HeaderParam("idProducto") int idProducto, 
                                    @HeaderParam("idInsumo") int idInsumo, 
-                                   @HeaderParam("cantidadUtilizada") int cantidadUtilizada) throws Exception{
+                                   @HeaderParam("cantidadUtilizada") int cantidadUtilizada){
         RecetaDAO dao = new RecetaDAO();
         if ( validador.validar_token(token) ){ 
            return dao.actualizarReceta(idProducto,idInsumo,cantidadUtilizada); 
@@ -120,14 +118,13 @@ public class RecetaREST {
      * @param idProducto
      * @param idInsumo
      * @return
-     * @throws java.lang.Exception
      */
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
     public String eliminarReceta(@HeaderParam("token")String token,
                                  @HeaderParam("idProducto") int idProducto,
-                                 @HeaderParam("idInsumo") int idInsumo) throws Exception{
+                                 @HeaderParam("idInsumo") int idInsumo){
         RecetaDAO dao = new RecetaDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarReceta(idProducto,idInsumo);
