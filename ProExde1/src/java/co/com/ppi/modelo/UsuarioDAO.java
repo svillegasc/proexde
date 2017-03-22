@@ -329,6 +329,7 @@ public class UsuarioDAO {
                     + "TIPO_IDENTIFICACION=?, TELEFONO=?, PASSWORD=?, ID_PERFIL=? "
                     + "WHERE ID_USUARIO = ? AND ESTADO='A'";
                     
+                    
                     boolean valPass = validarPassword(password);
                     if( idUsuario == -1){
                         return "Falta id usuario.";

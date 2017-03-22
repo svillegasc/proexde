@@ -108,13 +108,12 @@ public class EstadoProduccionREST {
      * @param token
      * @param estadoProduccion
      * @return
-     * @throws java.lang.Exception
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/eliminar")
      public String eliminarEstadoProduccion(@HeaderParam("token")String token,
-                                            @HeaderParam("estadoProduccion") int estadoProduccion) throws Exception{
+                                            @HeaderParam("estadoProduccion") int estadoProduccion){
         EstadoProduccionDAO dao = new EstadoProduccionDAO();
         if ( validador.validar_token(token) ){ 
             return dao.eliminarEstadoProduccion(estadoProduccion);
