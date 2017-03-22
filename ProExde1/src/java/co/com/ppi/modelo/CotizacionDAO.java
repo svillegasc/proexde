@@ -313,7 +313,7 @@ public class CotizacionDAO {
     
     public String eliminarCotizacion(int idCotizacion)
     {
-      String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";
+      String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = ? AND ESTADO='A'";
       String sql="UPDATE COTIZACIONS SET ESTADO='I' WHERE ID_COTIZACION = ?";
         try
         {
@@ -326,7 +326,7 @@ public class CotizacionDAO {
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setString(1, idCotizacion);
+                    pr.setInt(1, idCotizacion);
                     pr.executeUpdate(); 
                 }else{
                     return "0 filas encontradas";
