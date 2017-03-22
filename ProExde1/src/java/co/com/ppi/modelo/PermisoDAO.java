@@ -145,13 +145,13 @@ public class PermisoDAO {
                    p.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_PERMISO".toUpperCase().equals(select[j])){
+                        if("ID_PERMISO".equalsIgnoreCase(select[j])){
                             p.setIdPermiso(rs.getInt("ID_PERMISO"));
                         }  
-                        if("DESCRIPCION".toUpperCase().equals(select[j])){
+                        if("DESCRIPCION".equalsIgnoreCase(select[j])){
                             p.setDescripcion(rs.getString("DESCRIPCION"));
                         }
-                        if("ESTADO".toUpperCase().equals(select[j])){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             p.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -228,11 +228,12 @@ public class PermisoDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE PERMISO SET DESCRIPCION='"+descripcion+"'"
+                    String sql="UPDATE PERMISO SET DESCRIPCION=? "
                             + "WHERE ID_PERMISO = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idPermiso);
+                    pr.setString(1, descripcion);
+                    pr.setInt(2, idPermiso);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

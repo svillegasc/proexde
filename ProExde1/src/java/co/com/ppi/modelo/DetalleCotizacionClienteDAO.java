@@ -218,12 +218,13 @@ public class DetalleCotizacionClienteDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE DETALLE_COTIZACION_CLIENTE SET PRECIO='"+precio+"'"
+                    String sql="UPDATE DETALLE_COTIZACION_CLIENTE SET PRECIO= ? "
                             + "WHERE ID_COTIZACION = ? AND ID_PRODUCTO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idCotizacion);
-                    pr.setInt(2, idProducto);
+                    pr.setInt(1, precio);
+                    pr.setInt(2, idCotizacion);
+                    pr.setInt(3, idProducto);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

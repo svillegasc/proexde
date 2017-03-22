@@ -346,12 +346,16 @@ public class ProductoDAO {
                         return "Fecha no válida";
                     }
                     
-                    String sql="UPDATE PRODUCTO SET NOMBRE='"+nombre+"', DESCRIPCION='"+descripcion+"', "
-                        + "ULTIMA_ENTRADA=TO_DATE('"+ultimaEntrada+"','yyyy-mm-dd'), ULTIMA_SALIDA=TO_DATE('"+ultimaSalida+"','yyyy-mm-dd') "
+                    String sql="UPDATE PRODUCTO SET NOMBRE=?, DESCRIPCION=?, "
+                        + "ULTIMA_ENTRADA=TO_DATE(?,'yyyy-mm-dd'), ULTIMA_SALIDA=TO_DATE(?,'yyyy-mm-dd') "
                         + "WHERE ID_PRODUCTO = ? AND ESTADO='A'";         
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idProducto);
+                    pr.setString(1, nombre);
+                    pr.setString(2, descripcion);
+                    pr.setDate(3, ultimaEntrada);
+                    pr.setDate(4, ultimaSalida);
+                    pr.setInt(5, idProducto);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

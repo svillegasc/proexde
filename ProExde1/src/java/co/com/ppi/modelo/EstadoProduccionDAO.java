@@ -221,19 +221,20 @@ public class EstadoProduccionDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE ESTADO_PRODUCCION SET DESCRIPCION='"+descripcion+"' "
+                    String sql="UPDATE ESTADO_PRODUCCION SET DESCRIPCION=? "
                             + "WHERE ESTADO_PRODUCCION = ?";
                     
                     if( estadoProduccion == -1){
                         return "Falta el estado de producción.";
                     }else
-                    if( descripcion == null || descripcion.trim().equals("")){
+                    if( descripcion == null || "".trim().equals(descripcion)){
                         return "Falta la descripción del estado.";
                     }
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, estadoProduccion);
+                    pr.setString(1, descripcion);
+                    pr.setInt(2, estadoProduccion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

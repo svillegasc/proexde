@@ -225,18 +225,19 @@ public class TipoIdentificacionDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE TIPO_IDENTIFICACION SET DESCRIPCION='"+descripcion+"' "
+                    String sql="UPDATE TIPO_IDENTIFICACION SET DESCRIPCION=? "
                             + "WHERE TIPO_IDENTIFICACION = ? AND ESTADO='A'";
                     
                     if( tipoIdentificacion == -1){
                         return "Falta el tipo de identificación.";
-                    }
+                    }else
                     if( descripcion == null || "".trim().equals(descripcion)){
                         return "Falta la descripción del tipo de identificación.";
                     }
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setString(1, descripcion);
                     pr.setInt(1, tipoIdentificacion);
                     pr.executeUpdate();
                 }else{

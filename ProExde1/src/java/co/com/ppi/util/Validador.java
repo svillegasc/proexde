@@ -24,10 +24,9 @@ public class Validador {
     
     
     public boolean validar_token(String token){
-        CallableStatement sentencia = null;
         try {
             con=conex.conexion();
-            sentencia = con.prepareCall("{?=call validar_token(?)}");
+            CallableStatement sentencia = con.prepareCall("{?=call validar_token(?)}");
             sentencia.registerOutParameter(1, Types.INTEGER ); 
             sentencia.setString(2,token);                                             
             sentencia.executeQuery(); 
@@ -43,7 +42,6 @@ public class Validador {
         }finally{
             try {
                 con.close();
-                sentencia.close();
             } catch (SQLException ex) {
                 Logger.getLogger(Validador.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -43,7 +43,7 @@ public class ProveedorDAO {
             if( nit == null || "".trim().equals(nit)){
                 return "Falta el nit.";
             }else
-            if( valNit == false){
+            if( !valNit){
                 return "Nit ya existente";
             }else
             if( direccion == null || "".equals(direccion)){
@@ -318,13 +318,19 @@ public class ProveedorDAO {
                     if(!valEmail){
                         return "Email invalido";
                     }
-                    String sql="UPDATE PROVEEDOR SET NOMBRE='"+nombreEmpresa+"', NIT='"+nit+"', "
-                            + "DIRECCION='"+direccion+"', TELEFONO='"+telefono+"', NOMBRE_CONTACTO='"+nombreContacto+"', "
-                            + "EMAIL='"+email+"' "
+                    String sql="UPDATE PROVEEDOR SET NOMBRE=?, NIT=?, "
+                            + "DIRECCION=?, TELEFONO=?, NOMBRE_CONTACTO=?, "
+                            + "EMAIL=? "
                             + "WHERE ID_PROVEEDOR = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idProveedor);
+                    pr.setString(1, nombreEmpresa);
+                    pr.setString(2, nit);
+                    pr.setString(3, direccion);
+                    pr.setString(4, telefono);
+                    pr.setString(5, nombreContacto);
+                    pr.setString(6, email);
+                    pr.setInt(7, idProveedor);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
@@ -397,7 +403,6 @@ public class ProveedorDAO {
         Pattern pattern = Pattern.compile(PATTERN_EMAIL);
         Matcher matcher = pattern.matcher(email);
         
-        System.err.println(matcher.matches());
         return matcher.matches();
     }
     

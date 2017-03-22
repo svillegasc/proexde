@@ -236,12 +236,13 @@ public class DetallePedidoClienteDAO {
             
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE DETALLE_PEDIDO_CLIENTE SET CANTIDAD_PEDIDA='"+cantidadPedida+"'"
+                    String sql="UPDATE DETALLE_PEDIDO_CLIENTE SET CANTIDAD_PEDIDA= ? "
                             + "WHERE ID_PEDIDO = ? AND ID_PRODUCTO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idPedido);
-                    pr.setInt(2, idProducto);
+                    pr.setInt(1, cantidadPedida);
+                    pr.setInt(2, idPedido);
+                    pr.setInt(3, idProducto);
                     pr.executeUpdate();
                     if(cantidadPed != cantidadPedida){
                         valorTotalPedido(idPedido,idProducto);
@@ -301,11 +302,12 @@ public class DetallePedidoClienteDAO {
                 int precio = dcc.valorCotizacion(idCotizacion,idProducto);
                 valorTotal = valorTotal + (cantidadPedida*precio);
             }
-            String sqlI="UPDATE PEDIDO SET VALOR_TOTAL='"+valorTotal+"'"
+            String sqlI="UPDATE PEDIDO SET VALOR_TOTAL= ? "
                     + "WHERE ID_PEDIDO = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
-            pr.setInt(1, idPedido);
+            pr.setInt(1, valorTotal);
+            pr.setInt(2, idPedido);
             pr.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);

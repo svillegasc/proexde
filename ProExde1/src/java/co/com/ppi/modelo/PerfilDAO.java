@@ -229,11 +229,12 @@ public class PerfilDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE PERFIL SET NOMBRE='"+nombre+"'"
+                    String sql="UPDATE PERFIL SET NOMBRE=? "
                             + "WHERE ID_PERFIL = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idPerfil);
+                    pr.setString(1, nombre);
+                    pr.setInt(2, idPerfil);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

@@ -324,9 +324,9 @@ public class UsuarioDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE USUARIO SET CUENTA='"+cuenta+"', PRIMER_NOMBRE='"+primerNombre+"', SEGUNDO_NOMBRE='"+segundoNombre+"', "
-                    + "PRIMER_APELLIDO='"+primerApellido+"', SEGUNDO_APELLIDO='"+segundoApellido+"', IDENTIFICACION='"+identificacion+"', "
-                    + "TIPO_IDENTIFICACION='"+tipoIdentificacion+"', TELEFONO='"+telefono+"', PASSWORD='"+password+"', ID_PERFIL='"+idPerfil+"' "
+                    String sql="UPDATE USUARIO SET CUENTA=?, PRIMER_NOMBRE=?, SEGUNDO_NOMBRE=?, "
+                    + "PRIMER_APELLIDO=?, SEGUNDO_APELLIDO=?, IDENTIFICACION=?, "
+                    + "TIPO_IDENTIFICACION=?, TELEFONO=?, PASSWORD=?, ID_PERFIL=? "
                     + "WHERE ID_USUARIO = ? AND ESTADO='A'";
                     
                     boolean valPass = validarPassword(password);
@@ -361,7 +361,17 @@ public class UsuarioDAO {
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idUsuario);
+                    pr.setString(1, cuenta);
+                    pr.setString(2, primerNombre);
+                    pr.setString(3, segundoNombre);
+                    pr.setString(4, primerApellido);
+                    pr.setString(5, segundoApellido);
+                    pr.setString(6, identificacion);
+                    pr.setInt(7, tipoIdentificacion);
+                    pr.setString(8, telefono);
+                    pr.setString(9, password);
+                    pr.setInt(10, idPerfil);
+                    pr.setInt(11, idUsuario);
                     pr.executeUpdate();
                 }else{
                     return "0 filas actualizadas";
@@ -444,8 +454,6 @@ public class UsuarioDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return token;
     }
@@ -456,7 +464,6 @@ public class UsuarioDAO {
         Pattern pattern = Pattern.compile(PATTERN_EMAIL);
         Matcher matcher = pattern.matcher(pass);
         
-        System.err.println(matcher.matches());
         return matcher.matches();
     }
 }

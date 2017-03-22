@@ -362,12 +362,18 @@ public class InsumoDAO {
                         return "Fecha no válida";
                     }
                     
-                    String sql="UPDATE INSUMO SET NOMBRE='"+nombre+"', DESCRIPCION='"+descripcion+"', PRECIO_COMPRA='"+precioCompra+"', "
-                    + "UNIDAD_MEDIDA='"+unidadMedida+"', ULTIMA_ENTRADA=TO_DATE('"+ultimaEntrada+"','yyyy-mm-dd'), ULTIMA_SALIDA=TO_DATE('"+ultimaSalida+"', 'yyyy-mm-dd') "
+                    String sql="UPDATE INSUMO SET NOMBRE=?, DESCRIPCION=?, PRECIO_COMPRA=?, "
+                    + "UNIDAD_MEDIDA=?, ULTIMA_ENTRADA=TO_DATE(?,'yyyy-mm-dd'), ULTIMA_SALIDA=TO_DATE(?, 'yyyy-mm-dd') "
                     + "WHERE ID_INSUMO = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idInsumo);
+                    pr.setString(1, nombre);
+                    pr.setString(2, descripcion);
+                    pr.setInt(3, precioCompra);
+                    pr.setString(4, unidadMedida);
+                    pr.setDate(5, ultimaEntrada);
+                    pr.setDate(6, ultimaSalida);
+                    pr.setInt(7, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas actualizadas";

@@ -221,13 +221,14 @@ public class RecetaDAO {
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE RECETA SET CANTIDAD_UTILIZADA='"+cantidadUtilizada+"'"
+                    String sql="UPDATE RECETA SET CANTIDAD_UTILIZADA=? "
                             + "WHERE ID_PRODUCTO = ? "
                             + "AND ID_INSUMO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idProducto);
-                    pr.setInt(1, idInsumo);
+                    pr.setInt(1, cantidadUtilizada);
+                    pr.setInt(2, idProducto);
+                    pr.setInt(3, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

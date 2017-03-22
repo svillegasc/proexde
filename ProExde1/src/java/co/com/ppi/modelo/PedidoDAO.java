@@ -214,28 +214,28 @@ public class PedidoDAO {
                    p.setValorTotal(rs.getInt("VALOR_TOTAL"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_PEDIDO".toUpperCase().equals(select[j])){
+                        if("ID_PEDIDO".equalsIgnoreCase(select[j])){
                             p.setIdPedido(rs.getInt("ID_PEDIDO"));
                         }  
-                        if("ID_COTIZACION".toUpperCase().equals(select[j])){
+                        if("ID_COTIZACION".equalsIgnoreCase(select[j])){
                             p.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }
-                        if("FECHA_PEDIDO".toUpperCase().equals(select[j])){
+                        if("FECHA_PEDIDO".equalsIgnoreCase(select[j])){
                             p.setFechaPedido(rs.getDate("FECHA_PEDIDO"));
                         }
-                        if("CANTIDAD_PRODUCIDA".toUpperCase().equals(select[j])){
+                        if("CANTIDAD_PRODUCIDA".equalsIgnoreCase(select[j])){
                             p.setCantidadProducida(rs.getInt("CANTIDAD_PRODUCIDA"));
                         }
-                        if("FECHA_INICIO".toUpperCase().equals(select[j])){
+                        if("FECHA_INICIO".equalsIgnoreCase(select[j])){
                             p.setFechaInicio(rs.getDate("FECHA_INICIO"));
                         }
-                        if("FECHA_TERMINACION".toUpperCase().equals(select[j])){
+                        if("FECHA_TERMINACION".equalsIgnoreCase(select[j])){
                             p.setFechaTerminacion(rs.getDate("FECHA_TERMINACION"));
                         }
-                        if("ESTADO_PRODUCCION".toUpperCase().equals(select[j])){
+                        if("ESTADO_PRODUCCION".equalsIgnoreCase(select[j])){
                             p.setEstadoProduccion(rs.getInt("ESTADO_PRODUCCION"));
                         }
-                        if("VALOR_TOTAL".toUpperCase().equals(select[j])){
+                        if("VALOR_TOTAL".equalsIgnoreCase(select[j])){
                             p.setValorTotal(rs.getInt("VALOR_TOTAL"));
                         }
                     }
@@ -377,16 +377,22 @@ public class PedidoDAO {
                         return "Fecha no válida";
                     }
                     
-                    String sql="UPDATE PEDIDO SET ID_COTIZACION='"+idCotizacion+"', "
-                            + "FECHA_PEDIDO=TO_DATE('"+fechaPedido+"', 'yyyy-mm-dd'), "
-                            + "CANTIDAD_PRODUCIDA='"+cantidadProducida+"', "
-                            + "FECHA_INICIO=TO_DATE('"+fechaInicio+"', 'yyyy-mm-dd'), "
-                            + "FECHA_TERMINACION=TO_DATE('"+fechaTerminacion+"','yyyy-mm-dd'), "
-                            + "ESTADO_PRODUCCION='"+estadoProduccion+"' "
+                    String sql="UPDATE PEDIDO SET ID_COTIZACION=?, "
+                            + "FECHA_PEDIDO=TO_DATE(?, 'yyyy-mm-dd'), "
+                            + "CANTIDAD_PRODUCIDA=?, "
+                            + "FECHA_INICIO=TO_DATE(?, 'yyyy-mm-dd'), "
+                            + "FECHA_TERMINACION=TO_DATE(?,'yyyy-mm-dd'), "
+                            + "ESTADO_PRODUCCION=? "
                             + "WHERE ID_PEDIDO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idPedido);
+                    pr.setInt(1, idCotizacion);
+                    pr.setDate(2, fechaPedido);
+                    pr.setInt(3, cantidadProducida);
+                    pr.setDate(4, fechaInicio);
+                    pr.setDate(5, fechaTerminacion);
+                    pr.setInt(6, estadoProduccion);
+                    pr.setInt(7, idPedido);
                     pr.executeUpdate();
                 }else{
                     return "0 filas actualizadas";

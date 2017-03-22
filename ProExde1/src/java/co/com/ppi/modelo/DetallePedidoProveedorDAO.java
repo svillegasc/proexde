@@ -140,7 +140,7 @@ public class DetallePedidoProveedorDAO {
                    dPedProv.setPrecio(rs.getInt("PRECIO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_PEDIDO_PROVEEDOR".toUpperCase().equals(select[j])){
+                        if("ID_PEDIDO_PROVEEDOR".equalsIgnoreCase(select[j])){
                             dPedProv.setIdPedidoProveedor(rs.getInt("ID_PEDIDO_PROVEEDOR"));
                         }  
                         if("ID_INSUMO".equalsIgnoreCase(select[j])){
@@ -222,7 +222,6 @@ public class DetallePedidoProveedorDAO {
     
     public String actualizarDetallePedidoProveedor(int idPedidoProveedor,int idInsumo,int cantidad,int precio)
     {
-        int cantidadPed = 0;
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM DETALLE_PEDIDO_PROVEEDOR WHERE "
@@ -235,12 +234,14 @@ public class DetallePedidoProveedorDAO {
             
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE DETALLE_PEDIDO_PROVEEDOR SET CANTIDAD='"+cantidad+"', PRECIO='"+precio+"' "
+                    String sql="UPDATE DETALLE_PEDIDO_PROVEEDOR SET CANTIDAD=?, PRECIO=? "
                             + "WHERE ID_PEDIDO_PROVEEDOR = ? AND ID_INSUMO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1,idPedidoProveedor);
-                    pr.setInt(2,idInsumo);
+                    pr.setInt(1,cantidad);
+                    pr.setInt(2,precio);
+                    pr.setInt(3,idPedidoProveedor);
+                    pr.setInt(4,idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";

@@ -323,13 +323,16 @@ public class PedidoProveedorDAO {
                         return "Fecha no válida";
                     }
                     
-                    String sql="UPDATE PEDIDO_PROVEEDOR SET ID_PEDIDO_PROVEEDOR='"+idPedidoProveedor+"', "
-                        + "ID_PROVEEDOR='"+idProveedor+"', FECHA_PEDIDO=TO_DATE('"+fechaPedido+"','yyyy-mm-dd'), "
-                        + "ESTADO_PRODUCCION='"+estadoProduccion+"' "
+                    String sql="UPDATE PEDIDO_PROVEEDOR SET "
+                        + "ID_PROVEEDOR=?, FECHA_PEDIDO=TO_DATE(?,'yyyy-mm-dd'), "
+                        + "ESTADO_PRODUCCION=? "
                         + "WHERE ID_PEDIDO_PROVEEDOR = ?";         
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setInt(1, idPedidoProveedor);
+                    pr.setInt(1, idProveedor);
+                    pr.setDate(2, fechaPedido);
+                    pr.setInt(3, estadoProduccion);
+                    pr.setInt(4, idPedidoProveedor);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
