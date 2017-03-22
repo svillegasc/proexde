@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +52,7 @@ public class CotizacionDAO {
                 if ( fechaCreacion.after(fechaAct)) {
                     return "La fecha de creación no puede ser mayor a la fecha actual.";
                 }
-            }catch(Exception e){
+            }catch(ParseException e){
                 return "Fecha no válida";
             }
 
@@ -185,7 +186,7 @@ public class CotizacionDAO {
                result.add(c);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             producto.setIdCotizacion(-1);
             producto.setIdUsuario(-1);
@@ -198,7 +199,7 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){
+           catch(SQLException ex){
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
            }
        }
@@ -227,7 +228,7 @@ public class CotizacionDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -237,7 +238,7 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){
+           catch(SQLException ex){
               Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
            }
        }
@@ -246,14 +247,13 @@ public class CotizacionDAO {
     
     public String actualizarCotizacion(int idCotizacion,int idUsuario,String fechaCrea)
     {
-      String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = ? AND ESTADO='A'";
-      String sql="UPDATE COTIZACION SET ID_USUARIO='"+idUsuario+"', FECHA_CREACION=TO_DATE('"+fechaCreacion+"','yyyy-mm-dd') "
+        Date fechaCreacionC;
+        java.sql.Date fechaCreacion = null;
+        String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = ? AND ESTADO='A'";
+        String sql="UPDATE COTIZACION SET ID_USUARIO='"+idUsuario+"', FECHA_CREACION=TO_DATE('"+fechaCreacion+"','yyyy-mm-dd') "
                   + "WHERE ID_COTIZACION = ? AND ESTADO='A'"; 
         try
         {
-            
-            Date fechaCreacionC;
-            java.sql.Date fechaCreacion;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
             pr.setInt(1, idCotizacion);
@@ -278,7 +278,7 @@ public class CotizacionDAO {
                             return "La fecha de creación no puede ser mayor a la fecha actual.";
                         }
 
-                    }catch(Exception e){
+                    }catch(ParseException e){
                         return "Fecha no válida";
                     }
                     
@@ -292,7 +292,7 @@ public class CotizacionDAO {
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
        }
@@ -304,7 +304,7 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){
+           catch(SQLException ex){
               Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
            }
        }    
@@ -333,7 +333,7 @@ public class CotizacionDAO {
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -345,7 +345,7 @@ public class CotizacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){
+           catch(SQLException ex){
               Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
            }
        }    
