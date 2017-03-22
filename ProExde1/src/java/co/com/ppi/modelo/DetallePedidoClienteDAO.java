@@ -132,13 +132,13 @@ public class DetallePedidoClienteDAO {
                    dCotCl.setCantidadPedida(rs.getInt("CANTIDAD_PEDIDA"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_PEDIDO".equalsIgnoreCase((select[j]))){
+                        if("ID_PEDIDO".equalsIgnoreCase(select[j])){
                             dCotCl.setIdPedido(rs.getInt("ID_PEDIDO"));
                         }  
-                        if("ID_PRODUCTO".equalsIgnoreCase((select[j]))){
+                        if("ID_PRODUCTO".equalsIgnoreCase(select[j])){
                             dCotCl.setIdProducto(rs.getInt("ID_PRODUCTO"));
                         }
-                        if("CANTIDAD_PEDIDA".equalsIgnoreCase((select[j]))){
+                        if("CANTIDAD_PEDIDA".equalsIgnoreCase(select[j])){
                             dCotCl.setCantidadPedida(rs.getInt("CANTIDAD_PEDIDA"));
                         }
                     }

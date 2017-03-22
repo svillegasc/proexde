@@ -54,19 +54,18 @@ public class RecetaDAO {
         ArrayList<Receta> result = new ArrayList<> ();
         Receta receta = new Receta();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM RECETA ");
@@ -85,7 +84,7 @@ public class RecetaDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_RECETA") || campos[i].equals("ESTADO")){
+                            if ("ID_RECETA".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -133,19 +132,19 @@ public class RecetaDAO {
            {    
                Receta r = new Receta();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    r.setIdProducto(rs.getInt("ID_PRODUCTO"));
                    r.setIdInsumo(rs.getInt("ID_INSUMO"));
                    r.setCantidadUtilizada(rs.getInt("CANTIDAD_UTILIZADA"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PRODUCTO")){
+                        if("ID_PRODUCTO".equalsIgnoreCase(select[j])){
                             r.setIdProducto(rs.getInt("ID_PRODUCTO"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_INSUMO")){
+                        if("ID_INSUMO".equalsIgnoreCase(select[j])){
                             r.setIdInsumo(rs.getInt("ID_INSUMO"));
                         }
-                        if(select[j].toUpperCase().equals("CANTIDAD_UTILIZADA")){
+                        if("CANTIDAD_UTILIZADA".equalsIgnoreCase(select[j])){
                             r.setCantidadUtilizada(rs.getInt("CANTIDAD_UTILIZADA"));
                         }
                     }
@@ -153,7 +152,8 @@ public class RecetaDAO {
                result.add(r);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
+            Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             receta.setIdProducto(-1);
             receta.setIdInsumo(-1);
             receta.setCantidadUtilizada(-1);
@@ -166,7 +166,7 @@ public class RecetaDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }
@@ -193,7 +193,7 @@ public class RecetaDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(RecetaDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -203,7 +203,7 @@ public class RecetaDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(Exception ex){Logger.getLogger(CotizacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }
@@ -212,25 +212,29 @@ public class RecetaDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM RECETA WHERE ID_PRODUCTO = '"+idProducto+"' "
-                    + "AND ID_INSUMO='"+idInsumo+"' ";
+            String sqlI="SELECT COUNT (*) CONT FROM RECETA WHERE ID_PRODUCTO = ? "
+                    + "AND ID_INSUMO= ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idProducto);
+            pr.setInt(1, idInsumo);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE RECETA SET CANTIDAD_UTILIZADA='"+cantidadUtilizada+"'"
-                            + "WHERE ID_PRODUCTO = '"+idProducto+"' "
-                            + "AND ID_INSUMO='"+idInsumo+"' ";
+                            + "WHERE ID_PRODUCTO = ? "
+                            + "AND ID_INSUMO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idProducto);
+                    pr.setInt(1, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(RecetaDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -242,7 +246,7 @@ public class RecetaDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(RecetaDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }    
         return "Se actualizo correctamente";
     }
@@ -251,24 +255,28 @@ public class RecetaDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM RECETA WHERE ID_PRODUCTO = '"+idProducto+"' "
-                    + "AND ID_INSUMO='"+idInsumo+"' ";
+            String sqlI="SELECT COUNT (*) CONT FROM RECETA WHERE ID_PRODUCTO = ? "
+                    + "AND ID_INSUMO= ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idProducto);
+            pr.setInt(1, idInsumo);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="DELETE FROM RECETA WHERE ID_PRODUCTO = '"+idProducto+"' "
-                                + "AND ID_INSUMO = '"+idInsumo+"'";
+                    String sql="DELETE FROM RECETA WHERE ID_PRODUCTO = ? "
+                                + "AND ID_INSUMO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idProducto);
+                    pr.setInt(1, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(RecetaDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -280,7 +288,7 @@ public class RecetaDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(RecetaDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }    
         return "Se elimino correctamente";
     }

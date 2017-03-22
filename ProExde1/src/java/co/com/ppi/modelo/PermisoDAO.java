@@ -30,7 +30,7 @@ public class PermisoDAO {
         String sql="INSERT INTO PERMISO VALUES(?,?,?)";
         try
         {
-            if( descripcion == null || descripcion.trim().equals("")){
+            if( descripcion == null || "".trim().equals(descripcion)){
                 return "Falta la descripción del permiso.";
             }
 
@@ -64,19 +64,18 @@ public class PermisoDAO {
         ArrayList<Permiso> result = new ArrayList<> ();
         Permiso permiso = new Permiso();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM PERMISO ");
@@ -94,7 +93,7 @@ public class PermisoDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_PERMISO") || campos[i].equals("ESTADO")){
+                            if ("ID_PERMISO".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -140,19 +139,19 @@ public class PermisoDAO {
            {    
                Permiso p = new Permiso();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    p.setIdPermiso(rs.getInt("ID_PERMISO"));
                    p.setDescripcion(rs.getString("DESCRIPCION"));
                    p.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PERMISO")){
+                        if("ID_PERMISO".toUpperCase().equals(select[j])){
                             p.setIdPermiso(rs.getInt("ID_PERMISO"));
                         }  
-                        if(select[j].toUpperCase().equals("DESCRIPCION")){
+                        if("DESCRIPCION".toUpperCase().equals(select[j])){
                             p.setDescripcion(rs.getString("DESCRIPCION"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".toUpperCase().equals(select[j])){
                             p.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -160,7 +159,7 @@ public class PermisoDAO {
                result.add(p);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
             permiso.setIdPermiso(-1);
             permiso.setDescripcion(ex.getMessage());
@@ -173,7 +172,9 @@ public class PermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -199,7 +200,7 @@ public class PermisoDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -209,7 +210,9 @@ public class PermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -218,23 +221,25 @@ public class PermisoDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PERMISO WHERE ID_PERMISO = '"+idPermiso+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM PERMISO WHERE ID_PERMISO = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPermiso);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE PERMISO SET DESCRIPCION='"+descripcion+"'"
-                            + "WHERE ID_PERMISO = '"+idPermiso+"' AND ESTADO='A'";
+                            + "WHERE ID_PERMISO = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPermiso);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -246,7 +251,9 @@ public class PermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se actualizo correctamente";
     }
@@ -255,22 +262,24 @@ public class PermisoDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PERMISO WHERE ID_PERMISO = '"+idPermiso+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM PERMISO WHERE ID_PERMISO = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPermiso);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE PERMISO SET ESTADO='I' WHERE ID_PERMISO = '"+idPermiso+"'";
+                    String sql="UPDATE PERMISO SET ESTADO='I' WHERE ID_PERMISO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPermiso);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -282,7 +291,9 @@ public class PermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se elimino correctamente";
     }

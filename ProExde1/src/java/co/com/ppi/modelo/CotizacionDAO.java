@@ -168,16 +168,16 @@ public class CotizacionDAO {
                    c.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_COTIZACION".equalsIgnoreCase((select[j]))){
+                        if("ID_COTIZACION".equalsIgnoreCase(select[j])){
                             c.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }  
-                        if("ID_USUARIO".equalsIgnoreCase((select[j]))){
+                        if("ID_USUARIO".equalsIgnoreCase(select[j])){
                             c.setIdUsuario(rs.getInt("ID_USUARIO"));
                         }
-                        if("FECHA_CREACION".equalsIgnoreCase((select[j]))){
+                        if("FECHA_CREACION".equalsIgnoreCase(select[j])){
                             c.setFechaCreacion(rs.getDate("FECHA_CREACION"));
                         }
-                        if("ESTADO".equalsIgnoreCase((select[j]))){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             c.setEstado(rs.getString("ESTADO"));
                         }
                     }

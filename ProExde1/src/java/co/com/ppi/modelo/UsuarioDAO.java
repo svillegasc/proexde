@@ -38,25 +38,25 @@ public class UsuarioDAO {
         try
         {
             boolean valPass = validarPassword(password);
-            if( cuenta == null || cuenta.trim().equals("")){
+            if( cuenta == null || "".trim().equals(cuenta)){
                 return "Falta la cuenta.";
             }else
-            if( primerNombre == null || primerNombre.trim().equals("")){
+            if( primerNombre == null || "".trim().equals(primerNombre)){
                 return "Falta el primer nombre.";
             }else
-            if( primerApellido == null || primerApellido.trim().equals("")){
+            if( primerApellido == null || "".trim().equals(primerApellido)){
                 return "Falta el primer apellido.";
             }else
-            if( identificacion == null || identificacion.trim().equals("")){
+            if( identificacion == null || "".trim().equals(identificacion)){
                 return "Falta el número de identificación.";
             }else
             if( tipoIdentificacion == -1){
                 return "Falta el tipo de identificación.";
             }else
-            if( password == null || password.trim().equals("")){
+            if( password == null || "".trim().equals(password)){
                 return "Falta la contraseña.";
             }else
-            if(valPass == false){
+            if(!valPass){
                 return "Password incorrecta, recuerde que debe llevar Mayusculas, "
                         + "Minusculas, números y ser mayor a 6 y menor a 15.";
             }else
@@ -103,19 +103,19 @@ public class UsuarioDAO {
     {
         ArrayList<Usuario> result = new ArrayList<> ();
         Usuario usuario = new Usuario();
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_USUARIO,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM USUARIOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM USUARIO ");
@@ -135,7 +135,7 @@ public class UsuarioDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_USUARIO") || campos[i].equals("ESTADO")){
+                            if ("ID_USUARIO".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -184,7 +184,7 @@ public class UsuarioDAO {
            while ( rs.next() )
            {    
                Usuario u = new Usuario();
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    u.setIdUsuario(rs.getInt("ID_USUARIO"));
                    u.setCuenta(rs.getString("CUENTA"));
                    u.setPrimerNombre(rs.getString("PRIMER_NOMBRE"));
@@ -200,40 +200,40 @@ public class UsuarioDAO {
                    
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_USUARIO")){
+                        if("ID_USUARIO".equalsIgnoreCase(select[j])){
                             u.setIdUsuario(rs.getInt("ID_USUARIO"));
                         }  
-                        if(select[j].toUpperCase().equals("CUENTA")){
+                        if("CUENTA".equalsIgnoreCase(select[j])){
                             u.setCuenta(rs.getString("CUENTA"));
                         }
-                        if(select[j].toUpperCase().equals("PRIMER_NOMBRE")){
+                        if("PRIMER_NOMBRE".equalsIgnoreCase(select[j])){
                             u.setPrimerNombre(rs.getString("PRIMER_NOMBRE"));
                         }
-                        if(select[j].toUpperCase().equals("SEGUNDO_NOMBRE")){
+                        if("SEGUNDO_NOMBRE".equalsIgnoreCase(select[j])){
                             u.setSegundoNombre(rs.getString("SEGUNDO_NOMBRE"));
                         }
-                        if(select[j].toUpperCase().equals("PRIMER_APELLIDO")){
+                        if("PRIMER_APELLIDO".equalsIgnoreCase(select[j])){
                             u.setPrimerApellido(rs.getString("PRIMER_APELLIDO"));
                         }
-                        if(select[j].toUpperCase().equals("SEGUNDO_APELLIDO")){
+                        if("SEGUNDO_APELLIDO".equalsIgnoreCase(select[j])){
                             u.setSegundoApellido(rs.getString("SEGUNDO_APELLIDO"));
                         }
-                        if(select[j].toUpperCase().equals("IDENTIFICACION")){
+                        if("IDENTIFICACION".equalsIgnoreCase(select[j])){
                             u.setIdentificacion(rs.getString("IDENTIFICACION"));
                         }
-                        if(select[j].toUpperCase().equals("TIPO_IDENTIFICACION")){
+                        if("TIPO_IDENTIFICACION".equalsIgnoreCase(select[j])){
                             u.setTipoIdentificacion(rs.getInt("TIPO_IDENTIFICACION"));
                         }
-                        if(select[j].toUpperCase().equals("TELEFONO")){
+                        if("TELEFONO".equalsIgnoreCase(select[j])){
                             u.setTelefono(rs.getString("TELEFONO"));
                         }
-                        if(select[j].toUpperCase().equals("PASSWORD")){
+                        if("PASSWORD".equalsIgnoreCase(select[j])){
                             u.setPassword(rs.getString("PASSWORD"));
                         }
-                        if(select[j].toUpperCase().equals("ID_PERFIL")){
+                        if("ID_PERFIL".equalsIgnoreCase(select[j])){
                             u.setEstado(rs.getString("ID_PERFIL"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             u.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -242,7 +242,7 @@ public class UsuarioDAO {
                result.add(u);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             usuario.setIdPerfil(-1);
             usuario.setIdUsuario(-1);
@@ -257,7 +257,7 @@ public class UsuarioDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }
@@ -294,7 +294,7 @@ public class UsuarioDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -304,7 +304,7 @@ public class UsuarioDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }
@@ -317,34 +317,43 @@ public class UsuarioDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM USUARIO WHERE "
-                      + "ID_USUARIO = '"+idUsuario+"' AND ESTADO='A'";
+                      + "ID_USUARIO = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idUsuario);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE USUARIO SET CUENTA='"+cuenta+"', PRIMER_NOMBRE='"+primerNombre+"', SEGUNDO_NOMBRE='"+segundoNombre+"', "
                     + "PRIMER_APELLIDO='"+primerApellido+"', SEGUNDO_APELLIDO='"+segundoApellido+"', IDENTIFICACION='"+identificacion+"', "
                     + "TIPO_IDENTIFICACION='"+tipoIdentificacion+"', TELEFONO='"+telefono+"', PASSWORD='"+password+"', ID_PERFIL='"+idPerfil+"' "
-                    + "WHERE ID_USUARIO = '"+idUsuario+"' AND ESTADO='A'";
+                    + "WHERE ID_USUARIO = ? AND ESTADO='A'";
                     
-                    if( cuenta == null || cuenta.trim().equals("")){
+                    boolean valPass = validarPassword(password);
+                    if( idUsuario == -1){
+                        return "Falta id usuario.";
+                    }else
+                    if( cuenta == null || "".trim().equals(cuenta)){
                         return "Falta la cuenta.";
                     }else
-                    if( primerNombre == null || primerNombre.trim().equals("")){
+                    if( primerNombre == null || "".trim().equals(primerNombre)){
                         return "Falta el primer nombre.";
                     }else
-                    if( primerApellido == null || primerApellido.trim().equals("")){
+                    if( primerApellido == null || "".trim().equals(primerApellido)){
                         return "Falta el primer apellido.";
                     }else
-                    if( identificacion == null || identificacion.trim().equals("")){
+                    if( identificacion == null || "".trim().equals(identificacion)){
                         return "Falta el número de identificación.";
                     }else
                     if( tipoIdentificacion == -1){
                         return "Falta el tipo de identificación.";
                     }else
-                    if( password == null || password.trim().equals("")){
+                    if( password == null || "".trim().equals(password)){
                         return "Falta la contraseña.";
+                    }else
+                    if(!valPass){
+                        return "Password incorrecta, recuerde que debe llevar Mayusculas, "
+                                + "Minusculas, números y ser mayor a 6 y menor a 15.";
                     }else
                     if( idPerfil == -1){
                         return "Falta perfil.";
@@ -352,6 +361,7 @@ public class UsuarioDAO {
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idUsuario);
                     pr.executeUpdate();
                 }else{
                     return "0 filas actualizadas";
@@ -368,21 +378,23 @@ public class UsuarioDAO {
     public String eliminarUsuario(int idUsuario)
     {
         try{
-            String sqlI="SELECT COUNT (*) CONT FROM USUARIO WHERE ID_USUARIO = '"+idUsuario+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM USUARIO WHERE ID_USUARIO = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idUsuario);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE USUARIO SET ESTADO='I' WHERE ID_USUARIO = '"+idUsuario+"'";
+                    String sql="UPDATE USUARIO SET ESTADO='I' WHERE ID_USUARIO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idUsuario);
                     pr.executeUpdate();
                 }else{
                     return "0 filas eliminadas";
                 }
             }
-        }catch(Exception ex){
+        }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -394,14 +406,13 @@ public class UsuarioDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){
+           catch(SQLException ex){
            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }    
-//        return "El id del insumo #"+id_Usuario+" fue eliminado correctamente";
         return "Se elimino correctamente";
     }
     
-    public String logueoUsuario (String cuenta, String password) throws Exception{
+    public String logueoUsuario (String cuenta, String password){
         
         String token = null;
         Validador validador = new Validador();
@@ -433,6 +444,8 @@ public class UsuarioDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return token;
     }
@@ -443,7 +456,7 @@ public class UsuarioDAO {
         Pattern pattern = Pattern.compile(PATTERN_EMAIL);
         Matcher matcher = pattern.matcher(pass);
         
-        System.out.println(matcher.matches());
+        System.err.println(matcher.matches());
         return matcher.matches();
     }
 }

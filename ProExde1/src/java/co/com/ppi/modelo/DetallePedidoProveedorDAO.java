@@ -143,13 +143,13 @@ public class DetallePedidoProveedorDAO {
                         if("ID_PEDIDO_PROVEEDOR".toUpperCase().equals(select[j])){
                             dPedProv.setIdPedidoProveedor(rs.getInt("ID_PEDIDO_PROVEEDOR"));
                         }  
-                        if("ID_INSUMO".equalsIgnoreCase((select[j]))){
+                        if("ID_INSUMO".equalsIgnoreCase(select[j])){
                             dPedProv.setIdInsumo(rs.getInt("ID_INSUMO"));
                         }
-                        if("CANTIDAD".equalsIgnoreCase((select[j]))){
+                        if("CANTIDAD".equalsIgnoreCase(select[j])){
                             dPedProv.setCantidad(rs.getInt("CANTIDAD"));
                         }
-                        if("PRECIO".equalsIgnoreCase((select[j]))){
+                        if("PRECIO".equalsIgnoreCase(select[j])){
                             dPedProv.setPrecio(rs.getInt("PRECIO"));
                         }
                     }

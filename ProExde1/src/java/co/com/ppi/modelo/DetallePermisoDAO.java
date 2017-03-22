@@ -29,17 +29,19 @@ public class DetallePermisoDAO {
     {
        try
        {  
-            String sqlI="SELECT COUNT (*) CONT FROM PERFIL WHERE ID_PERFIL = '"+idPerfil+"' AND "
+            String sqlI="SELECT COUNT (*) CONT FROM PERFIL WHERE ID_PERFIL = ? AND "
                         + "ESTADO = 'A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1,idPerfil);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    sqlI="SELECT COUNT (*) CONT FROM PERMISO WHERE ID_PERMISO = '"+idPermiso+"' AND "
+                    sqlI="SELECT COUNT (*) CONT FROM PERMISO WHERE ID_PERMISO = ? AND "
                         + "ESTADO = 'A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sqlI);
+                    pr.setInt(1,idPermiso);
                     rs=pr.executeQuery();
                     if(rs.next()){
                         if (rs.getInt("CONT")!= 0) {
@@ -73,19 +75,18 @@ public class DetallePermisoDAO {
         ArrayList<DetallePermiso> result = new ArrayList<> ();
         DetallePermiso dp = new DetallePermiso();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM DETALLE_PERMISO ");
@@ -104,7 +105,7 @@ public class DetallePermisoDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("DETALLE_PERMISO") || campos[i].equals("ESTADO")){
+                            if ("DETALLE_PERMISO".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -152,19 +153,19 @@ public class DetallePermisoDAO {
            {    
                DetallePermiso dper = new DetallePermiso();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    dper.setIdPermiso(rs.getInt("ID_PERMISO"));
                    dper.setIdPerfil(rs.getInt("ID_PERFIL"));
                    dper.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PERMISO")){
+                        if("ID_PERMISO".equalsIgnoreCase(select[j])){
                             dper.setIdPermiso(rs.getInt("ID_PERMISO"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_PERFIL")){
+                        if("ID_PERFIL".equalsIgnoreCase(select[j])){
                             dper.setIdPerfil(rs.getInt("ID_PERFIL"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             dper.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -172,7 +173,7 @@ public class DetallePermisoDAO {
                result.add(dper);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(DetallePermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
             dp.setIdPermiso(-1);
             dp.setIdPerfil(-1);    
@@ -186,7 +187,9 @@ public class DetallePermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetallePermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -231,24 +234,28 @@ public class DetallePermisoDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM DETALLE_PERMISO WHERE ID_PERMISO = '"+idPermiso+"' AND "
-                        + "ID_PERFIL = '"+idPerfil+"'";
+            String sqlI="SELECT COUNT (*) CONT FROM DETALLE_PERMISO WHERE ID_PERMISO = ? AND "
+                        + "ID_PERFIL = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1,idPermiso);
+            pr.setInt(1,idPerfil);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="DELETE FROM DETALLE_PERMISO WHERE ID_PERMISO = '"+idPermiso+"' "
-                                + "AND ID_PERFIL = '"+idPerfil+"'";
+                    String sql="DELETE FROM DETALLE_PERMISO WHERE ID_PERMISO = ? "
+                                + "AND ID_PERFIL = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1,idPermiso);
+                    pr.setInt(1,idPerfil);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(DetallePermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -260,7 +267,9 @@ public class DetallePermisoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetallePermisoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se elimino correctamente";
     }    

@@ -37,28 +37,28 @@ public class ProveedorDAO {
         {
             boolean valEmail = validarEmail(email);
             boolean valNit = validarNit(nit);
-            if( nombreEmpresa == null || nombreEmpresa.trim().equals("")){
+            if( nombreEmpresa == null || "".trim().equals(nombreEmpresa)){
                 return "Falta el nombre de la empresa.";
             }else
-            if( nit == null || nit.trim().equals("")){
+            if( nit == null || "".trim().equals(nit)){
                 return "Falta el nit.";
             }else
             if( valNit == false){
                 return "Nit ya existente";
             }else
-            if( direccion == null || direccion.equals("")){
+            if( direccion == null || "".equals(direccion)){
                 return "Falta la dirección.";
             }else
-            if( telefono == null || telefono.equals("")){
+            if( telefono == null || "".equals(telefono)){
                 return "Falta el télefono.";
             }else
-            if( nombreContacto == null || nombreContacto.equals("")){
+            if( nombreContacto == null || "".equals(nombreContacto)){
                 return "Falta el nombre del contacto.";
             }else
-            if( email == null || email.equals("")){
+            if( email == null || "".equals(email)){
                 return "Falta el email.";
             }else
-            if( valEmail == false){
+            if(!valEmail){
                 return "Email invalido";
             }
             
@@ -97,19 +97,18 @@ public class ProveedorDAO {
         ArrayList<Proveedor> result = new ArrayList<> ();
         Proveedor proveedor = new Proveedor();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_PROVEEDOR,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM PROVEEDORES WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM PROVEEDOR ");
@@ -127,7 +126,7 @@ public class ProveedorDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_PROVEEDOR") || campos[i].equals("ESTADO")){
+                            if ("ID_PROVEEDOR".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -173,7 +172,7 @@ public class ProveedorDAO {
            {    
                Proveedor i = new Proveedor();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    i.setIdProveedor(rs.getInt("ID_PROVEEDOR"));
                    i.setNombre(rs.getString("NOMBRE"));
                    i.setNit(rs.getString("NIT"));
@@ -184,28 +183,28 @@ public class ProveedorDAO {
                    i.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PROVEEDOR")){
+                        if("ID_PROVEEDOR".equalsIgnoreCase(select[j])){
                             i.setIdProveedor(rs.getInt("ID_PROVEEDOR"));
                         }  
-                        if(select[j].toUpperCase().equals("NOMBRE")){
+                        if("NOMBRE".equalsIgnoreCase(select[j])){
                             i.setNombre(rs.getString("NOMBRE"));
                         }
-                        if(select[j].toUpperCase().equals("NIT")){
+                        if("NIT".equalsIgnoreCase(select[j])){
                             i.setNit(rs.getString("NIT"));
                         }
-                        if(select[j].toUpperCase().equals("DIRECCION")){
+                        if("DIRECCION".equalsIgnoreCase(select[j])){
                             i.setDireccion(rs.getString("DIRECCION"));
                         }
-                        if(select[j].toUpperCase().equals("TELEFONO")){
+                        if("TELEFONO".equalsIgnoreCase(select[j])){
                             i.setTelefono(rs.getString("TELEFONO"));
                         }
-                        if(select[j].toUpperCase().equals("NOMBRE_CONTACTO")){
+                        if("NOMBRE_CONTACTO".equalsIgnoreCase(select[j])){
                             i.setNombreContacto(rs.getString("NOMBRE_CONTACTO"));
                         }
-                        if(select[j].toUpperCase().equals("EMAIL")){
+                        if("EMAIL".equalsIgnoreCase(select[j])){
                             i.setEmail(rs.getString("EMAIL"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             i.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -214,7 +213,7 @@ public class ProveedorDAO {
                result.add(i);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
             proveedor.setIdProveedor(-1);
             proveedor.setNit(ex.getMessage());
@@ -227,7 +226,9 @@ public class ProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -258,7 +259,7 @@ public class ProveedorDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -268,7 +269,9 @@ public class ProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(Exception ex){
+                Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -279,47 +282,56 @@ public class ProveedorDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR WHERE ID_PROVEEDOR = '"+idProveedor+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR WHERE ID_PROVEEDOR = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idProveedor);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     boolean valEmail = validarEmail(email);
-                    if( nombreEmpresa == null || nombreEmpresa.trim().equals("")){
+                    boolean valNit = validarNit(nit);
+                    if( idProveedor == -1){
+                        return "Falta el id proveedor.";
+                    }else
+                    if( nombreEmpresa == null || "".trim().equals(nombreEmpresa)){
                         return "Falta el nombre de la empresa.";
                     }else
-                    if( nit == null || nit.trim().equals("")){
+                    if( nit == null || "".trim().equals(nit)){
                         return "Falta el nit.";
                     }else
-                    if( direccion == null || direccion.equals("")){
+                    if(!valNit){
+                        return "Nit ya existente";
+                    }else
+                    if( direccion == null || "".equals(direccion)){
                         return "Falta la dirección.";
                     }else
-                    if( telefono == null || telefono.equals("")){
+                    if( telefono == null || "".equals(telefono)){
                         return "Falta el télefono.";
                     }else
-                    if( nombreContacto == null || nombreContacto.equals("")){
+                    if( nombreContacto == null || "".equals(nombreContacto)){
                         return "Falta el nombre del contacto.";
                     }else
-                    if( email == null || email.equals("")){
+                    if( email == null || "".equals(email)){
                         return "Falta el email.";
                     }else
-                    if( valEmail == false){
+                    if(!valEmail){
                         return "Email invalido";
                     }
                     String sql="UPDATE PROVEEDOR SET NOMBRE='"+nombreEmpresa+"', NIT='"+nit+"', "
                             + "DIRECCION='"+direccion+"', TELEFONO='"+telefono+"', NOMBRE_CONTACTO='"+nombreContacto+"', "
                             + "EMAIL='"+email+"' "
-                            + "WHERE ID_PROVEEDOR = '"+idProveedor+"' AND ESTADO='A'";
+                            + "WHERE ID_PROVEEDOR = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idProveedor);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
        }
@@ -331,9 +343,10 @@ public class ProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
-//        return "El id del proveedor #"+id_Proveedor+" fue actualizado correctamente";
         return "Se actualizo correctamente";
     }
     
@@ -341,22 +354,24 @@ public class ProveedorDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR WHERE ID_PROVEEDOR = '"+idProveedor+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR WHERE ID_PROVEEDOR = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idProveedor);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE PROVEEDOR SET ESTADO='I' WHERE ID_PROVEEDOR = '"+idProveedor+"'";
+                    String sql="UPDATE PROVEEDOR SET ESTADO='I' WHERE ID_PROVEEDOR = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idProveedor);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -368,9 +383,10 @@ public class ProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
-//        return "El id del proveedor #"+id_Proveedor+" fue eliminado correctamente";
         return "Se elimino correctamente";
     }
     
@@ -381,15 +397,16 @@ public class ProveedorDAO {
         Pattern pattern = Pattern.compile(PATTERN_EMAIL);
         Matcher matcher = pattern.matcher(email);
         
-        System.out.println(matcher.matches());
+        System.err.println(matcher.matches());
         return matcher.matches();
     }
     
     public boolean validarNit(String nit){
         try {
-            String sql = "SELECT COUNT(*) CONT FROM PROVEEDOR WHERE NIT = '"+nit+"'";
+            String sql = "SELECT COUNT(*) CONT FROM PROVEEDOR WHERE NIT = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sql);
+            pr.setString(1, nit);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {

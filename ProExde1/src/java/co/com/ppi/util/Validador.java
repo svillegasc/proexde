@@ -1,14 +1,19 @@
 package co.com.ppi.util;
 
+import co.com.ppi.modelo.RecetaDAO;
+import co.com.ppi.modelo.UsuarioDAO;
 import co.com.ppi.util.Conexion;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Validador {
 
@@ -18,35 +23,50 @@ public class Validador {
     Conexion conex = new Conexion();
     
     
-    public boolean validar_token(String token)throws Exception{
-        
-        con=conex.conexion();
-        CallableStatement sentencia = con.prepareCall("{?=call validar_token(?)}");
-        sentencia.registerOutParameter(1, Types.INTEGER ); 
-        sentencia.setString(2,token);                                             
-        sentencia.executeQuery(); 
-        
-        if(sentencia.getInt(1) != -1){
-            actualizarFechaToken(token);
-            return true;
-        }else{
-            return false;
-        }    
+    public boolean validar_token(String token){
+        try {
+            con=conex.conexion();
+            CallableStatement sentencia = con.prepareCall("{?=call validar_token(?)}");
+            sentencia.registerOutParameter(1, Types.INTEGER ); 
+            sentencia.setString(2,token);                                             
+            sentencia.executeQuery(); 
+
+            if(sentencia.getInt(1) != -1){
+                actualizarFechaToken(token);
+                return true;
+            }else{
+                return false;
+            }
+        }catch(Exception e){
+          Logger.getLogger(Validador.class.getName()).log(Level.SEVERE, null, e);
+        }finally{
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Validador.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
     }
     
     
-    public boolean actualizarFechaToken(String token)throws Exception{
+    public boolean actualizarFechaToken(String token){
        
-        con = conex.conexion();
-        pr = con.prepareStatement("UPDATE usuario u set u.token_fecha = ? WHERE u.token = ?");
-        pr.setString(1,formatoFechaToken());
-        pr.setString(2,token);
-        pr.executeUpdate();
-        return true;
+        try {
+            con = conex.conexion();
+            pr = con.prepareStatement("UPDATE usuario u set u.token_fecha = ? WHERE u.token = ?");
+            pr.setString(1,formatoFechaToken());
+            pr.setString(2,token);
+            pr.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(Validador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
 
-    public String formatoFechaToken()throws Exception{       
+    public String formatoFechaToken(){       
         
         DateFormat df = new SimpleDateFormat("yyyyMMddhhmm");
         java.util.Date fechaAct = new java.util.Date();
@@ -54,7 +74,7 @@ public class Validador {
     }
 
    
-    public String crearToken()throws Exception{
+    public String crearToken() throws SQLException{
 
         String sql= "SELECT (dbms_random.string('X',15)) token FROM dual";
         con=conex.conexion();

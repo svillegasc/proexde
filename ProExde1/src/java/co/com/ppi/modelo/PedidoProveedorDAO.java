@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +40,7 @@ public class PedidoProveedorDAO {
             if( idProveedor == -1){
                 return "Falta el id del proveedor";
             }else
-            if( fechaPed == null || fechaPed.equals("")){
+            if( fechaPed == null || "".equals(fechaPed)){
                 return "Falta la fecha de pedido.";
             }else
             if( estadoProduccion == -1){
@@ -65,7 +66,7 @@ public class PedidoProveedorDAO {
                     return "La fecha de pedido no puede ser mayor a la fecha actual.";
                 }
 
-            }catch(Exception e){
+            }catch(ParseException e){
                 return "Fecha no válida";
             }
 
@@ -101,19 +102,18 @@ public class PedidoProveedorDAO {
         ArrayList<PedidoProveedor> result = new ArrayList<> ();
         PedidoProveedor pedido_proveedor = new PedidoProveedor();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_PEDIDO_PROVEEDOR,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM PEDIDO_PROVEEDORS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM PEDIDO_PROVEEDOR ");
@@ -122,7 +122,6 @@ public class PedidoProveedorDAO {
                pedido_proveedor.setIdProveedor(-1);
                pedido_proveedor.setEstado_produccion(-1);
                pedido_proveedor.setTotal(-1);
-//               pedido_proveedor.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                result.add(pedido_proveedor);
                return result;
            }
@@ -134,7 +133,7 @@ public class PedidoProveedorDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_PEDIDO_PROVEEDOR") || campos[i].equals("ESTADO")){
+                            if ("ID_PEDIDO_PROVEEDOR".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -157,7 +156,6 @@ public class PedidoProveedorDAO {
                     pedido_proveedor.setIdProveedor(-1);
                     pedido_proveedor.setEstado_produccion(-1);
                     pedido_proveedor.setTotal(-1);
-//               pedido_proveedor.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                     result.add(pedido_proveedor);
                     return result;
                 }        
@@ -167,7 +165,6 @@ public class PedidoProveedorDAO {
                 pedido_proveedor.setIdProveedor(-1);
                 pedido_proveedor.setEstado_produccion(-1);
                 pedido_proveedor.setTotal(-1);
-//               pedido_proveedor.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                 result.add(pedido_proveedor);
                 return result;  
            }
@@ -186,7 +183,7 @@ public class PedidoProveedorDAO {
            {    
                PedidoProveedor pp = new PedidoProveedor();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    pp.setIdPedidoProveedor(rs.getInt("ID_PEDIDO_PROVEEDOR"));
                    pp.setIdProveedor(rs.getInt("ID_PROVEEDOR"));
                    pp.setFechaPedido(rs.getDate("FECHA_PEDIDO"));
@@ -196,19 +193,19 @@ public class PedidoProveedorDAO {
                    
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PEDIDO_PROVEEDOR")){
+                        if("ID_PEDIDO_PROVEEDOR".equalsIgnoreCase(select[j])){
                             pp.setIdPedidoProveedor(rs.getInt("ID_PEDIDO_PROVEEDOR"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_PROVEEDOR")){
+                        if("ID_PROVEEDOR".equalsIgnoreCase(select[j])){
                             pp.setIdProveedor(rs.getInt("ID_PROVEEDOR"));
                         }
-                        if(select[j].toUpperCase().equals("FECHA_PEDIDO")){
+                        if("FECHA_PEDIDO".equalsIgnoreCase(select[j])){
                             pp.setFechaPedido(rs.getDate("FECHA_PEDIDO"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO_PRODUCCION")){
+                        if("ESTADO_PRODUCCION".equalsIgnoreCase(select[j])){
                             pp.setEstado_produccion(rs.getInt("ESTADO_PRODUCCION"));
                         }
-                        if(select[j].toUpperCase().equals("TOTAL")){
+                        if("TOTAL".equalsIgnoreCase(select[j])){
                             pp.setTotal(rs.getInt("TOTAL"));
                         }
                     }
@@ -217,13 +214,12 @@ public class PedidoProveedorDAO {
                result.add(pp);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PedidoProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
             pedido_proveedor.setIdPedidoProveedor(-1);
             pedido_proveedor.setIdProveedor(-1);
             pedido_proveedor.setEstado_produccion(-1);
             pedido_proveedor.setTotal(-1);
-//            pedido_proveedor.setDescripcion(ex.getMessage());
             result.add(pedido_proveedor);
             return result;
         }
@@ -233,7 +229,9 @@ public class PedidoProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PedidoProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -262,7 +260,7 @@ public class PedidoProveedorDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(PedidoProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -272,7 +270,9 @@ public class PedidoProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PedidoProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -283,11 +283,12 @@ public class PedidoProveedorDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM PEDIDO_PROVEEDOR "
-                      + "WHERE ID_PEDIDO_PROVEEDOR = '"+idPedidoProveedor+"'";
+                      + "WHERE ID_PEDIDO_PROVEEDOR = ?";
             Date fechaPedidoPP = null;
             java.sql.Date fechaPedido;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPedidoProveedor);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
@@ -295,7 +296,7 @@ public class PedidoProveedorDAO {
                     if( idProveedor == -1){
                         return "Falta el id del proveedor";
                     }else
-                    if( fechaPed == null || fechaPed.equals("")){
+                    if( fechaPed == null || "".equals(fechaPed)){
                         return "Falta la fecha de pedido.";
                     }else
                     if( estadoProduccion == -1){
@@ -318,23 +319,24 @@ public class PedidoProveedorDAO {
                             return "La fecha de pedido no puede ser mayor a la fecha actual.";
                         }
 
-                    }catch(Exception e){
+                    }catch(ParseException e){
                         return "Fecha no válida";
                     }
                     
                     String sql="UPDATE PEDIDO_PROVEEDOR SET ID_PEDIDO_PROVEEDOR='"+idPedidoProveedor+"', "
                         + "ID_PROVEEDOR='"+idProveedor+"', FECHA_PEDIDO=TO_DATE('"+fechaPedido+"','yyyy-mm-dd'), "
                         + "ESTADO_PRODUCCION='"+estadoProduccion+"' "
-                        + "WHERE ID_PEDIDO_PROVEEDOR = '"+idPedidoProveedor+"'";         
+                        + "WHERE ID_PEDIDO_PROVEEDOR = ?";         
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPedidoProveedor);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PedidoProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
        }
@@ -346,9 +348,10 @@ public class PedidoProveedorDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PedidoProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
-//        return "El id del producto #"+id_PedidoProveedor+" fue actualizado correctamente";
         return "Se actualizo correctamente";
     }
 }

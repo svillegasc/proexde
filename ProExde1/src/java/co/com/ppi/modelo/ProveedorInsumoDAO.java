@@ -29,17 +29,19 @@ public class ProveedorInsumoDAO {
     {
        try
        {  
-            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR WHERE ID_PROVEEDOR= '"+idProveedor+"' AND "
+            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR WHERE ID_PROVEEDOR= ? AND "
                         + "ESTADO = 'A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idProveedor);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = '"+idInsumo+"' AND "
+                    sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = ? AND "
                         + "ESTADO = 'A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sqlI);
+                    pr.setInt(1, idInsumo);
                     rs=pr.executeQuery();
                     if(rs.next()){
                         if (rs.getInt("CONT")!= 0) {
@@ -72,26 +74,24 @@ public class ProveedorInsumoDAO {
         ArrayList<ProveedorInsumo> result = new ArrayList<> ();
         ProveedorInsumo prIn = new ProveedorInsumo();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM PROVEEDOR_INSUMO ");
            }else{
                prIn.setIdProveedor(-1);
                prIn.setIdInsumo(-1);
-//               dp.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                result.add(prIn);
                return result;
            }
@@ -103,7 +103,7 @@ public class ProveedorInsumoDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("PROVEEDOR_INSUMO") || campos[i].equals("ESTADO")){
+                            if ("PROVEEDOR_INSUMO".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -124,7 +124,6 @@ public class ProveedorInsumoDAO {
                }else{
                     prIn.setIdProveedor(-1);
                     prIn.setIdInsumo(-1);
-     //               dp.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                     result.add(prIn);
                     return result;
                 }        
@@ -132,7 +131,6 @@ public class ProveedorInsumoDAO {
            if( (campos != null && valores == null) || (campos == null && valores != null) ){
                 prIn.setIdProveedor(-1);
                 prIn.setIdInsumo(-1);
- //               dp.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                 result.add(prIn);
                 return result;  
            }
@@ -151,15 +149,15 @@ public class ProveedorInsumoDAO {
            {    
                ProveedorInsumo pi = new ProveedorInsumo();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    pi.setIdProveedor(rs.getInt("ID_PROVEEDOR"));
                    pi.setIdInsumo(rs.getInt("ID_INSUMO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PROVEEDOR")){
+                        if("ID_PROVEEDOR".equalsIgnoreCase(select[j])){
                             pi.setIdProveedor(rs.getInt("ID_PROVEEDOR"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_INSUMO")){
+                        if("ID_INSUMO".equalsIgnoreCase(select[j])){
                             pi.setIdInsumo(rs.getInt("ID_INSUMO"));
                         }
                     }
@@ -167,11 +165,10 @@ public class ProveedorInsumoDAO {
                result.add(pi);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(ProveedorInsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
             prIn.setIdProveedor(-1);
             prIn.setIdInsumo(-1);
-        //               dp.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
             result.add(prIn);
             return result;
         }
@@ -181,7 +178,9 @@ public class ProveedorInsumoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(ProveedorInsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -207,7 +206,7 @@ public class ProveedorInsumoDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(ProveedorInsumoDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -217,7 +216,9 @@ public class ProveedorInsumoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(ProveedorInsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -226,24 +227,28 @@ public class ProveedorInsumoDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR_INSUMO WHERE ID_PROVEEDOR = '"+idProveedor+"' AND "
-                        + "ID_INSUMO = '"+idInsumo+"'";
+            String sqlI="SELECT COUNT (*) CONT FROM PROVEEDOR_INSUMO WHERE ID_PROVEEDOR = ? AND "
+                        + "ID_INSUMO = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1,idProveedor);
+            pr.setInt(2, idInsumo);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="DELETE FROM PROVEEDOR_INSUMO WHERE ID_PROVEEDOR = '"+idProveedor+"' "
-                                + "AND ID_INSUMO = '"+idInsumo+"'";
+                    String sql="DELETE FROM PROVEEDOR_INSUMO WHERE ID_PROVEEDOR = ? "
+                                + "AND ID_INSUMO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1,idProveedor);
+                    pr.setInt(2, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(ProveedorInsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -255,7 +260,9 @@ public class ProveedorInsumoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(ProveedorInsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se elimino correctamente";
     }

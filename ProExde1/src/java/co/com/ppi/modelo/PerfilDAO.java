@@ -31,7 +31,7 @@ public class PerfilDAO {
         String sql="INSERT INTO PERFIL VALUES(?,?,?)";
         try
         {
-            if( nombre == null || nombre.trim().equals("")){
+            if( nombre == null || "".trim().equals(nombre)){
                 return "Falta el nombre.";
             }
 
@@ -65,19 +65,18 @@ public class PerfilDAO {
         ArrayList<Perfil> result = new ArrayList<> ();
         Perfil perfil = new Perfil();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM PERFIL ");
@@ -95,7 +94,7 @@ public class PerfilDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_PERFIL") || campos[i].equals("ESTADO")){
+                            if ("ID_PERFIL".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -141,19 +140,19 @@ public class PerfilDAO {
            {    
                Perfil i = new Perfil();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    i.setIdPerfil(rs.getInt("ID_PERFIL"));
                    i.setNombre(rs.getString("NOMBRE"));
                    i.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PERFIL")){
+                        if("ID_PERFIL".equalsIgnoreCase(select[j])){
                             i.setIdPerfil(rs.getInt("ID_PERFIL"));
                         }  
-                        if(select[j].toUpperCase().equals("NOMBRE")){
+                        if("NOMBRE".equalsIgnoreCase(select[j])){
                             i.setNombre(rs.getString("NOMBRE"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             i.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -161,7 +160,7 @@ public class PerfilDAO {
                result.add(i);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
             perfil.setIdPerfil(-1);
             perfil.setNombre(ex.getMessage());
@@ -174,7 +173,9 @@ public class PerfilDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -200,7 +201,7 @@ public class PerfilDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -210,7 +211,9 @@ public class PerfilDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -219,23 +222,25 @@ public class PerfilDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PERFIL WHERE ID_PERFIL = '"+idPerfil+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM PERFIL WHERE ID_PERFIL = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPerfil);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE PERFIL SET NOMBRE='"+nombre+"'"
-                            + "WHERE ID_PERFIL = '"+idPerfil+"' AND ESTADO='A'";
+                            + "WHERE ID_PERFIL = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPerfil);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -247,7 +252,9 @@ public class PerfilDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se actualizo correctamente";
     }
@@ -256,22 +263,24 @@ public class PerfilDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PERFIL WHERE ID_PERFIL = '"+idPerfil+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM PERFIL WHERE ID_PERFIL = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPerfil);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE PERFIL SET ESTADO='I' WHERE ID_PERFIL = '"+idPerfil+"'";
+                    String sql="UPDATE PERFIL SET ESTADO='I' WHERE ID_PERFIL = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPerfil);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -283,7 +292,9 @@ public class PerfilDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PerfilDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se elimino correctamente";
     }

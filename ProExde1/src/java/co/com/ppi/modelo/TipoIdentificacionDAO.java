@@ -30,7 +30,7 @@ public class TipoIdentificacionDAO {
         String sql="INSERT INTO TIPO_IDENTIFICACION VALUES(?,?,?)";
         try
         {
-            if( descripcion == null || descripcion.trim().equals("")){
+            if( descripcion == null || "".trim().equals(descripcion)){
                 return "Falta la descripción del tipo de identificación.";
             }
             
@@ -64,19 +64,18 @@ public class TipoIdentificacionDAO {
         ArrayList<TipoIdentificacion> result = new ArrayList<> ();
         TipoIdentificacion ti = new TipoIdentificacion();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM TIPO_IDENTIFICACION ");
@@ -94,7 +93,7 @@ public class TipoIdentificacionDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("TIPO_IDENTIFICACION") || campos[i].equals("ESTADO")){
+                            if ("TIPO_IDENTIFICACION".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -140,19 +139,19 @@ public class TipoIdentificacionDAO {
            {    
                TipoIdentificacion p = new TipoIdentificacion();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    p.setTipoIdentificacion(rs.getInt("TIPO_IDENTIFICACION"));
                    p.setDescripcion(rs.getString("DESCRIPCION"));
                    p.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("TIPO_IDENTIFICACION")){
+                        if("TIPO_IDENTIFICACION".equalsIgnoreCase(select[j])){
                             p.setTipoIdentificacion(rs.getInt("TIPO_IDENTIFICACION"));
                         }  
-                        if(select[j].toUpperCase().equals("DESCRIPCION")){
+                        if("DESCRIPCION".equalsIgnoreCase(select[j])){
                             p.setDescripcion(rs.getString("DESCRIPCION"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             p.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -160,7 +159,7 @@ public class TipoIdentificacionDAO {
                result.add(p);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             ti.setTipoIdentificacion(-1);
             ti.setDescripcion(ex.getMessage());
@@ -173,7 +172,7 @@ public class TipoIdentificacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }
@@ -199,7 +198,7 @@ public class TipoIdentificacionDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -209,7 +208,7 @@ public class TipoIdentificacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }
         return result;
     }
@@ -219,31 +218,33 @@ public class TipoIdentificacionDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM TIPO_IDENTIFICACION "
-                      + "WHERE TIPO_IDENTIFICACION = '"+tipoIdentificacion+"' AND ESTADO='A'";
+                      + "WHERE TIPO_IDENTIFICACION = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, tipoIdentificacion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE TIPO_IDENTIFICACION SET DESCRIPCION='"+descripcion+"' "
-                            + "WHERE TIPO_IDENTIFICACION = '"+tipoIdentificacion+"' AND ESTADO='A'";
+                            + "WHERE TIPO_IDENTIFICACION = ? AND ESTADO='A'";
                     
                     if( tipoIdentificacion == -1){
                         return "Falta el tipo de identificación.";
                     }
-                    if( descripcion == null || descripcion.trim().equals("")){
+                    if( descripcion == null || "".trim().equals(descripcion)){
                         return "Falta la descripción del tipo de identificación.";
                     }
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, tipoIdentificacion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -255,7 +256,7 @@ public class TipoIdentificacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }    
         return "Se actualizo correctamente";
     }
@@ -265,23 +266,25 @@ public class TipoIdentificacionDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM TIPO_IDENTIFICACION "
-                      + "WHERE TIPO_IDENTIFICACION = '"+tipoIdentificacion+"' AND ESTADO='A'";
+                      + "WHERE TIPO_IDENTIFICACION = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, tipoIdentificacion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE TIPO_IDENTIFICACION SET ESTADO='I' "
-                             + "WHERE TIPO_IDENTIFICACION = '"+tipoIdentificacion+"'";
+                             + "WHERE TIPO_IDENTIFICACION = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, tipoIdentificacion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -293,7 +296,7 @@ public class TipoIdentificacionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){Logger.getLogger(TipoIdentificacionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        }    
         return "Se elimino correctamente";
     }

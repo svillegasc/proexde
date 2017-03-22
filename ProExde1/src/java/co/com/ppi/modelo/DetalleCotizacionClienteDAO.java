@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,13 +131,13 @@ public class DetalleCotizacionClienteDAO {
                    dCotCl.setPrecio(rs.getInt("PRECIO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_COTIZACION".equalsIgnoreCase((select[j]))){
+                        if("ID_COTIZACION".equalsIgnoreCase(select[j])){
                             dCotCl.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }  
-                        if("ID_PRODUCTO".equalsIgnoreCase((select[j]))){
+                        if("ID_PRODUCTO".equalsIgnoreCase(select[j])){
                             dCotCl.setIdProducto(rs.getInt("ID_PRODUCTO"));
                         }
-                        if("PRECIO".equalsIgnoreCase((select[j]))){
+                        if("PRECIO".equalsIgnoreCase(select[j])){
                             dCotCl.setPrecio(rs.getInt("PRECIO"));
                         }
                     }

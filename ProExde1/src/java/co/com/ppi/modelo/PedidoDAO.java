@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,13 +44,13 @@ public class PedidoDAO {
             if( idCotizacion == -1){
                 return "Falta el id de cotización.";
             }else
-            if( fechaPed == null || fechaPed.trim().equals("")){
+            if( fechaPed == null || "".trim().equals(fechaPed)){
                 return "Falta la fecha de pedido.";
             }else
-            if( fechaIni == null || fechaIni.trim().equals("")){
+            if( fechaIni == null || "".trim().equals(fechaIni)){
                 return "Falta la fecha de inicio de producción.";
             }else
-            if( fechaTer == null || fechaTer.equals("")){
+            if( fechaTer == null || "".equals(fechaTer)){
                 return "Falta la fecha de terminación de la producción.";
             }else
             if( estadoProduccion == -1){
@@ -81,7 +82,7 @@ public class PedidoDAO {
                     return "La fecha de inicio no puede ser mayor a la fecha de terminación.";
                 }
 
-            }catch(Exception e){
+            }catch(ParseException e){
                 return "Fecha no válida";
             }
             
@@ -118,19 +119,19 @@ public class PedidoDAO {
     {
         ArrayList<Pedido> result = new ArrayList<> ();
         Pedido pedido = new Pedido();
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_PEDIDO,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM PEDIDOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM PEDIDO ");
@@ -140,7 +141,6 @@ public class PedidoDAO {
                pedido.setCantidadProducida(-1);
                pedido.setEstadoProduccion(-1);
                pedido.setValorTotal(-1);
-//               insumo.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                result.add(pedido);
                return result;
            }
@@ -152,7 +152,7 @@ public class PedidoDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_PEDIDO") || campos[i].equals("ESTADO")){
+                            if ("ID_PEDIDO".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -176,7 +176,6 @@ public class PedidoDAO {
                     pedido.setCantidadProducida(-1);
                     pedido.setEstadoProduccion(-1);
                     pedido.setValorTotal(-1);
-     //               insumo.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                     result.add(pedido);
                     return result;
                 }        
@@ -187,7 +186,6 @@ public class PedidoDAO {
                 pedido.setCantidadProducida(-1);
                 pedido.setEstadoProduccion(-1);
                 pedido.setValorTotal(-1);
-//               insumo.setDescripcion("ERROR: Faltan los campos a seleccionar en la consulta.");
                 result.add(pedido);
                 return result;  
            }
@@ -205,7 +203,7 @@ public class PedidoDAO {
            while ( rs.next() )
            {    
                Pedido p = new Pedido();
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    p.setIdPedido(rs.getInt("ID_PEDIDO"));
                    p.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                    p.setFechaPedido(rs.getDate("FECHA_PEDIDO"));
@@ -216,28 +214,28 @@ public class PedidoDAO {
                    p.setValorTotal(rs.getInt("VALOR_TOTAL"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PEDIDO")){
+                        if("ID_PEDIDO".toUpperCase().equals(select[j])){
                             p.setIdPedido(rs.getInt("ID_PEDIDO"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_COTIZACION")){
+                        if("ID_COTIZACION".toUpperCase().equals(select[j])){
                             p.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }
-                        if(select[j].toUpperCase().equals("FECHA_PEDIDO")){
+                        if("FECHA_PEDIDO".toUpperCase().equals(select[j])){
                             p.setFechaPedido(rs.getDate("FECHA_PEDIDO"));
                         }
-                        if(select[j].toUpperCase().equals("CANTIDAD_PRODUCIDA")){
+                        if("CANTIDAD_PRODUCIDA".toUpperCase().equals(select[j])){
                             p.setCantidadProducida(rs.getInt("CANTIDAD_PRODUCIDA"));
                         }
-                        if(select[j].toUpperCase().equals("FECHA_INICIO")){
+                        if("FECHA_INICIO".toUpperCase().equals(select[j])){
                             p.setFechaInicio(rs.getDate("FECHA_INICIO"));
                         }
-                        if(select[j].toUpperCase().equals("FECHA_TERMINACION")){
+                        if("FECHA_TERMINACION".toUpperCase().equals(select[j])){
                             p.setFechaTerminacion(rs.getDate("FECHA_TERMINACION"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO_PRODUCCION")){
+                        if("ESTADO_PRODUCCION".toUpperCase().equals(select[j])){
                             p.setEstadoProduccion(rs.getInt("ESTADO_PRODUCCION"));
                         }
-                        if(select[j].toUpperCase().equals("VALOR_TOTAL")){
+                        if("VALOR_TOTAL".toUpperCase().equals(select[j])){
                             p.setValorTotal(rs.getInt("VALOR_TOTAL"));
                         }
                     }
@@ -246,14 +244,13 @@ public class PedidoDAO {
                result.add(p);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(PedidoDAO.class.getName()).log(Level.SEVERE, null, ex);
             pedido.setIdPedido(-1);
             pedido.setIdCotizacion(-1);
             pedido.setCantidadProducida(-1);
             pedido.setEstadoProduccion(-1);
             pedido.setValorTotal(-1);
-//            insumo.setDescripcion(ex.getMessage());
             result.add(pedido);
             return result;
         }
@@ -263,7 +260,9 @@ public class PedidoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PedidoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -296,7 +295,7 @@ public class PedidoDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(PedidoDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -306,7 +305,9 @@ public class PedidoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(PedidoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -316,15 +317,16 @@ public class PedidoDAO {
                                    String fechaTer,int estadoProduccion){
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM PEDIDO WHERE ID_PEDIDO = '"+idPedido+"' ";
-            Date fechaPedidoP = null;
-            Date fechaInicioP = null;
-            Date fechaTerminacionP = null;
+            String sqlI="SELECT COUNT (*) CONT FROM PEDIDO WHERE ID_PEDIDO = ? ";
+            Date fechaPedidoP;
+            Date fechaInicioP;
+            Date fechaTerminacionP;
             java.sql.Date fechaPedido;
             java.sql.Date fechaInicio;
             java.sql.Date fechaTerminacion;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPedido);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
@@ -332,16 +334,13 @@ public class PedidoDAO {
                     if( idCotizacion == -1){
                         return "Falta el id de cotización.";
                     }else
-                    if( fechaPed == null || fechaPed.trim().equals("")){
+                    if( fechaPed == null || "".trim().equals(fechaPed)){
                         return "Falta la fecha de pedido.";
                     }else
-                    if( cantidadProducida == -1){
-                        return "Falta la cantidad a producir.";
-                    }else
-                    if( fechaIni == null || fechaIni.trim().equals("")){
+                    if( fechaIni == null || "".trim().equals(fechaIni)){
                         return "Falta la fecha de inicio de producción.";
                     }else
-                    if( fechaTer == null || fechaTer.equals("")){
+                    if( fechaTer == null || "".equals(fechaTer)){
                         return "Falta la fecha de terminación de la producción.";
                     }else
                     if( estadoProduccion == -1){
@@ -374,7 +373,7 @@ public class PedidoDAO {
                             return "La fecha de inicio no puede ser mayor a la fecha de terminación.";
                         }
 
-                    }catch(Exception e){
+                    }catch(ParseException e){
                         return "Fecha no válida";
                     }
                     
@@ -384,9 +383,10 @@ public class PedidoDAO {
                             + "FECHA_INICIO=TO_DATE('"+fechaInicio+"', 'yyyy-mm-dd'), "
                             + "FECHA_TERMINACION=TO_DATE('"+fechaTerminacion+"','yyyy-mm-dd'), "
                             + "ESTADO_PRODUCCION='"+estadoProduccion+"' "
-                            + "WHERE ID_PEDIDO = '"+idPedido+"'";
+                            + "WHERE ID_PEDIDO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPedido);
                     pr.executeUpdate();
                 }else{
                     return "0 filas actualizadas";

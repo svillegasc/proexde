@@ -30,7 +30,7 @@ public class EstadoProduccionDAO {
         String sql="INSERT INTO ESTADO_PRODUCCION VALUES(?,?)";
         try
         {
-            if( descripcion == null || descripcion.trim().equals("")){
+            if( descripcion == null || "".trim().equals(descripcion)){
                 return "Falta la descripción del estado.";
             }
             String sqlI="SELECT EPRODUC.NEXTVAL FROM DUAL";
@@ -61,19 +61,18 @@ public class EstadoProduccionDAO {
         ArrayList<EstadoProduccion> result = new ArrayList<> ();
         EstadoProduccion ep = new EstadoProduccion();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM ESTADO_PRODUCCION ");
@@ -91,7 +90,7 @@ public class EstadoProduccionDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ESTADO_PRODUCCION") || campos[i].equals("ESTADO")){
+                            if ("ESTADO_PRODUCCION".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -137,15 +136,15 @@ public class EstadoProduccionDAO {
            {    
                EstadoProduccion p = new EstadoProduccion();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    p.setEstadoProduccion(rs.getInt("ESTADO_PRODUCCION"));
                    p.setDescripcion(rs.getString("DESCRIPCION"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ESTADO_PRODUCCION")){
+                        if("ESTADO_PRODUCCION".equalsIgnoreCase(select[j])){
                             p.setEstadoProduccion(rs.getInt("ESTADO_PRODUCCION"));
                         }  
-                        if(select[j].toUpperCase().equals("DESCRIPCION")){
+                        if("DESCRIPCION".equalsIgnoreCase(select[j])){
                             p.setDescripcion(rs.getString("DESCRIPCION"));
                         }
                     }
@@ -153,7 +152,7 @@ public class EstadoProduccionDAO {
                result.add(p);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
             ep.setEstadoProduccion(-1);
             ep.setDescripcion(ex.getMessage());
@@ -166,7 +165,9 @@ public class EstadoProduccionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -192,7 +193,7 @@ public class EstadoProduccionDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -202,7 +203,9 @@ public class EstadoProduccionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -211,14 +214,15 @@ public class EstadoProduccionDAO {
     {
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = '"+estadoProduccion+"'";
+            String sqlI="SELECT COUNT (*) CONT FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, estadoProduccion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE ESTADO_PRODUCCION SET DESCRIPCION='"+descripcion+"' "
-                            + "WHERE ESTADO_PRODUCCION = '"+estadoProduccion+"'";
+                            + "WHERE ESTADO_PRODUCCION = ?";
                     
                     if( estadoProduccion == -1){
                         return "Falta el estado de producción.";
@@ -229,13 +233,14 @@ public class EstadoProduccionDAO {
                     
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, estadoProduccion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -247,7 +252,9 @@ public class EstadoProduccionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se actualizo correctamente";
     }
@@ -257,22 +264,24 @@ public class EstadoProduccionDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM ESTADO_PRODUCCION "
-                    + "WHERE ESTADO_PRODUCCION = '"+estadoProduccion+"'";
+                    + "WHERE ESTADO_PRODUCCION = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, estadoProduccion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="DELETE FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = '"+estadoProduccion+"'";
+                    String sql="DELETE FROM ESTADO_PRODUCCION WHERE ESTADO_PRODUCCION = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, estadoProduccion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -284,7 +293,9 @@ public class EstadoProduccionDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(EstadoProduccionDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se elimino correctamente";
     }   

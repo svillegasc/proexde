@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,22 +38,22 @@ public class InsumoDAO {
         java.sql.Date ultimaSalida;
         try
         {
-            if( nombre == null || nombre.trim().equals("")){
+            if( nombre == null || "".trim().equals(nombre)){
                 return "Falta el nombre.";
             }else
-            if( descripcion == null || descripcion.trim().equals("")){
+            if( descripcion == null || "".trim().equals(descripcion)){
                 return "Falta la descripcion.";
             }else
             if( precioCompra == -1){
                 return "Falta el precio de compra";
             }else
-            if( unidadMedida == null || unidadMedida.trim().equals("")){
+            if( unidadMedida == null || "".trim().equals(unidadMedida)){
                 return "Falta la unidad de medida.";
             }else
-            if( ultimaEnt == null || ultimaEnt.equals("")){
+            if( ultimaEnt == null || "".equals(ultimaEnt)){
                 return "Falta la fecha de ultima entrada.";
             }else
-            if( ultimaSal == null || ultimaSal.equals("")){
+            if( ultimaSal == null || "".equals(ultimaSal)){
                 return "Falta la fecha de ultima salida.";
             }
 
@@ -77,7 +78,7 @@ public class InsumoDAO {
                     return "La ultima fecha de salida no puede ser menor a la ultima fecha de entrada.";
                 }
 
-            }catch(Exception e){
+            }catch(ParseException e){
                 return "Fecha no válida";
             }
 
@@ -116,19 +117,19 @@ public class InsumoDAO {
     {
         ArrayList<Insumo> result = new ArrayList<> ();
         Insumo insumo = new Insumo();
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,NOMBRE,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM INSUMO ");
@@ -146,7 +147,7 @@ public class InsumoDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("ID_INSUMO") || campos[i].equals("ESTADO")){
+                            if ("ID_INSUMO".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -191,7 +192,7 @@ public class InsumoDAO {
            while ( rs.next() )
            {    
                Insumo i = new Insumo();
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    i.setIdInsumo(rs.getInt("ID_INSUMO"));
                    i.setNombre(rs.getString("NOMBRE"));
                    i.setDescripcion(rs.getString("DESCRIPCION"));
@@ -203,31 +204,31 @@ public class InsumoDAO {
                    i.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_INSUMO")){
+                        if("ID_INSUMO".equalsIgnoreCase(select[j])){
                             i.setIdInsumo(rs.getInt("ID_INSUMO"));
                         }  
-                        if(select[j].toUpperCase().equals("NOMBRE")){
+                        if("NOMBRE".equalsIgnoreCase(select[j])){
                             i.setNombre(rs.getString("NOMBRE"));
                         }
-                        if(select[j].toUpperCase().equals("DESCRIPCION")){
+                        if("DESCRIPCION".equalsIgnoreCase(select[j])){
                             i.setDescripcion(rs.getString("DESCRIPCION"));
                         }
-                        if(select[j].toUpperCase().equals("PRECIO_COMPRA")){
+                        if("PRECIO_COMPRA".equalsIgnoreCase(select[j])){
                             i.setPrecioCompra(rs.getInt("PRECIO_COMPRA"));
                         }
-                        if(select[j].toUpperCase().equals("UNIDAD_MEDIDA")){
+                        if("UNIDAD_MEDIDA".equalsIgnoreCase(select[j])){
                             i.setUnidadMedida(rs.getString("UNIDAD_MEDIDA"));
                         }
-                        if(select[j].toUpperCase().equals("STOCK")){
+                        if("STOCK".equalsIgnoreCase(select[j])){
                             i.setStock(rs.getInt("STOCK"));
                         }
-                        if(select[j].toUpperCase().equals("ULTIMA_ENTRADA")){
+                        if("ULTIMA_ENTRADA".equalsIgnoreCase(select[j])){
                             i.setUltimaEntrada(rs.getDate("ULTIMA_ENTRADA"));
                         }
-                        if(select[j].toUpperCase().equals("ULTIMA_SALIDA")){
+                        if("ULTIMA_SALIDA".equalsIgnoreCase(select[j])){
                             i.setUltimaSalida(rs.getDate("ULTIMA_SALIDA"));
                         }
-                        if(select[j].toUpperCase().equals("ESTADO")){
+                        if("ESTADO".equalsIgnoreCase(select[j])){
                             i.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -236,7 +237,7 @@ public class InsumoDAO {
                result.add(i);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(InsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
             insumo.setIdInsumo(-1);
             insumo.setDescripcion(ex.getMessage());
@@ -249,7 +250,9 @@ public class InsumoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(InsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -281,7 +284,7 @@ public class InsumoDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(InsumoDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -291,7 +294,9 @@ public class InsumoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(InsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -302,32 +307,33 @@ public class InsumoDAO {
         try
         {
             String sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = '"+idInsumo+"' AND ESTADO='A'";
-            Date ultimaEntradaA = null;
-            Date ultimaSalidaA = null;
+            Date ultimaEntradaA;
+            Date ultimaSalidaA;
             java.sql.Date ultimaEntrada;
             java.sql.Date ultimaSalida;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idInsumo);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     
-                    if( nombre == null || nombre.trim().equals("")){
+                    if( nombre == null || "".trim().equals(nombre)){
                         return "Falta el nombre.";
                     }else
-                    if( descripcion == null || descripcion.trim().equals("")){
+                    if( descripcion == null || "".trim().equals(descripcion)){
                         return "Falta la descripcion.";
                     }else
                     if( precioCompra == -1){
                         return "Falta el precio de compra";
                     }else
-                    if( unidadMedida == null || unidadMedida.trim().equals("")){
+                    if( unidadMedida == null || "".trim().equals(unidadMedida)){
                         return "Falta la unidad de medida.";
                     }else
-                    if( ultimaEnt == null || ultimaEnt.equals("")){
+                    if( ultimaEnt == null || "".equals(ultimaEnt)){
                         return "Falta la fecha de ultima entrada.";
                     }else
-                    if( ultimaSal == null || ultimaSal.equals("")){
+                    if( ultimaSal == null || "".equals(ultimaSal)){
                         return "Falta la fecha de ultima salida.";
                     }
 
@@ -352,15 +358,16 @@ public class InsumoDAO {
                             return "La ultima fecha de salida no puede ser menor a la ultima fecha de entrada.";
                         }
 
-                    }catch(Exception e){
+                    }catch(ParseException e){
                         return "Fecha no válida";
                     }
                     
                     String sql="UPDATE INSUMO SET NOMBRE='"+nombre+"', DESCRIPCION='"+descripcion+"', PRECIO_COMPRA='"+precioCompra+"', "
                     + "UNIDAD_MEDIDA='"+unidadMedida+"', ULTIMA_ENTRADA=TO_DATE('"+ultimaEntrada+"','yyyy-mm-dd'), ULTIMA_SALIDA=TO_DATE('"+ultimaSalida+"', 'yyyy-mm-dd') "
-                    + "WHERE ID_INSUMO = '"+idInsumo+"' AND ESTADO='A'";
+                    + "WHERE ID_INSUMO = ? AND ESTADO='A'";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas actualizadas";
@@ -377,21 +384,23 @@ public class InsumoDAO {
     public String eliminarInsumo(int idInsumo)
     {
         try{
-            String sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = '"+idInsumo+"' AND ESTADO='A'";
+            String sqlI="SELECT COUNT (*) CONT FROM INSUMO WHERE ID_INSUMO = ? AND ESTADO='A'";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idInsumo);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
-                    String sql="UPDATE INSUMO SET ESTADO='I' WHERE ID_INSUMO = '"+idInsumo+"'";
+                    String sql="UPDATE INSUMO SET ESTADO='I' WHERE ID_INSUMO = ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idInsumo);
                     pr.executeUpdate();
                 }else{
                     return "0 filas eliminadas";
                 }
             }
-        }catch(Exception ex){
+        }catch(SQLException ex){
             Logger.getLogger(InsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -403,9 +412,10 @@ public class InsumoDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(InsumoDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
-//        return "El id del insumo #"+id_Insumo+" fue eliminado correctamente";
         return "Se elimino correctamente";
     }
 }
