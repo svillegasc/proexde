@@ -167,16 +167,16 @@ public class CotizacionDAO {
                    c.setEstado(rs.getString("ESTADO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if("ID_COTIZACION".equalsIgnoreCase().equals(select[j])){
+                        if("ID_COTIZACION".equalsIgnoreCase((select[j]))){
                             c.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }  
-                        if("ID_USUARIO".equalsIgnoreCase().equals(select[j])){
+                        if("ID_USUARIO".equalsIgnoreCase((select[j]))){
                             c.setIdUsuario(rs.getInt("ID_USUARIO"));
                         }
-                        if("FECHA_CREACION".equalsIgnoreCase().equals(select[j])){
+                        if("FECHA_CREACION".equalsIgnoreCase((select[j]))){
                             c.setFechaCreacion(rs.getDate("FECHA_CREACION"));
                         }
-                        if("ESTADO".equalsIgnoreCase().equals(select[j])){
+                        if("ESTADO".equalsIgnoreCase((select[j]))){
                             c.setEstado(rs.getString("ESTADO"));
                         }
                     }
@@ -248,7 +248,7 @@ public class CotizacionDAO {
     {
       String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = ? AND ESTADO='A'";
       String sql="UPDATE COTIZACION SET ID_USUARIO='"+idUsuario+"', FECHA_CREACION=TO_DATE('"+fechaCreacion+"','yyyy-mm-dd') "
-                  + "WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'"; 
+                  + "WHERE ID_COTIZACION = ? AND ESTADO='A'"; 
         try
         {
             
@@ -256,7 +256,7 @@ public class CotizacionDAO {
             java.sql.Date fechaCreacion;
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
-            pr.setString(1, idCotizacion);
+            pr.setInt(1, idCotizacion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
@@ -285,7 +285,7 @@ public class CotizacionDAO {
                             
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
-                    pr.setString(1, idCotizacion);
+                    pr.setInt(1, idCotizacion);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
@@ -314,12 +314,12 @@ public class CotizacionDAO {
     public String eliminarCotizacion(int idCotizacion)
     {
       String sqlI="SELECT COUNT (*) CONT FROM COTIZACION WHERE ID_COTIZACION = '"+idCotizacion+"' AND ESTADO='A'";
-      String sql="UPDATE COTIZACIONS SET ESTADO='I' WHERE ID_COTIZACION = '"+idCotizacion+"'";
+      String sql="UPDATE COTIZACIONS SET ESTADO='I' WHERE ID_COTIZACION = ?";
         try
         {
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
-            pr.setString(1, idCotizacion);
+            pr.setInt(1, idCotizacion);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
