@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,26 +51,24 @@ public class DetalleCotizacionClienteDAO {
         ArrayList<DetalleCotizacionCliente> result = new ArrayList<> ();
         DetalleCotizacionCliente dcc = new DetalleCotizacionCliente();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM DETALLE_COTIZACION_CLIENTE ");
            }else{
                dcc.setIdCotizacion(-1);
                dcc.setIdProducto(-1);
-//               dcc.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                result.add(dcc);
                return result;
            }
@@ -81,7 +80,7 @@ public class DetalleCotizacionClienteDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("DETALLE_COTIZACION_CLIENTE") || campos[i].equals("ESTADO")){
+                            if ("DETALLE_COTIZACION_CLIENTE".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -102,7 +101,6 @@ public class DetalleCotizacionClienteDAO {
                }else{
                     dcc.setIdCotizacion(-1);
                     dcc.setIdProducto(-1);
-     //               dcc.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                     result.add(dcc);
                     return result;
                 }        
@@ -110,7 +108,6 @@ public class DetalleCotizacionClienteDAO {
            if( (campos != null && valores == null) || (campos == null && valores != null) ){
                 dcc.setIdCotizacion(-1);
                 dcc.setIdProducto(-1);
-//               dcc.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                 result.add(dcc);
                 return result;  
            }
@@ -129,19 +126,19 @@ public class DetalleCotizacionClienteDAO {
            {    
                DetalleCotizacionCliente dCotCl = new DetalleCotizacionCliente();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    dCotCl.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                    dCotCl.setIdProducto(rs.getInt("ID_PRODUCTO"));
                    dCotCl.setPrecio(rs.getInt("PRECIO"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_COTIZACION")){
+                        if("ID_COTIZACION".equalsIgnoreCase((select[j]))){
                             dCotCl.setIdCotizacion(rs.getInt("ID_COTIZACION"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_PRODUCTO")){
+                        if("ID_PRODUCTO".equalsIgnoreCase((select[j]))){
                             dCotCl.setIdProducto(rs.getInt("ID_PRODUCTO"));
                         }
-                        if(select[j].toUpperCase().equals("PRECIO")){
+                        if("PRECIO".equalsIgnoreCase((select[j]))){
                             dCotCl.setPrecio(rs.getInt("PRECIO"));
                         }
                     }
@@ -149,11 +146,10 @@ public class DetalleCotizacionClienteDAO {
                result.add(dCotCl);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
             dcc.setIdCotizacion(-1);
             dcc.setIdProducto(-1);
-//            dcc.setEstado(ex.getMessage());
             result.add(dcc);
             return result;
         }
@@ -163,7 +159,9 @@ public class DetalleCotizacionClienteDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -190,7 +188,7 @@ public class DetalleCotizacionClienteDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -200,33 +198,40 @@ public class DetalleCotizacionClienteDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
     
     public String actualizarDetalleCotizacionCliente(int idCotizacion,int idProducto,int precio)
     {
+        String sqlI="SELECT COUNT (*) CONT FROM DETALLE_COTIZACION_CLIENTE WHERE "
+                    + "ID_COTIZACION = ? AND ID_PRODUCTO= ?";
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM DETALLE_COTIZACION_CLIENTE WHERE "
-                    + "ID_COTIZACION = '"+idCotizacion+"' AND ID_PRODUCTO='"+idProducto+"'";
+            
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idCotizacion);
+            pr.setInt(2, idProducto);
             rs=pr.executeQuery();
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE DETALLE_COTIZACION_CLIENTE SET PRECIO='"+precio+"'"
-                            + "WHERE ID_COTIZACION = '"+idCotizacion+"' AND ID_PRODUCTO='"+idProducto+"'";
+                            + "WHERE ID_COTIZACION = ? AND ID_PRODUCTO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idCotizacion);
+                    pr.setInt(2, idProducto);
                     pr.executeUpdate();
                 }else{
                     return "0 filas encontradas";
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -238,18 +243,22 @@ public class DetalleCotizacionClienteDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se actualizo correctamente";
     }
     
     public int valorCotizacion(int idCotizacion, int idProducto){
         int precio = 0;
+        String sql="SELECT PRECIO FROM DETALLE_COTIZACION_CLIENTE WHERE "
+                    + "ID_COTIZACION = ? AND ID_PRODUCTO = ?";
         try {
-            String sql="SELECT PRECIO FROM DETALLE_COTIZACION_CLIENTE WHERE "
-                    + "ID_COTIZACION = '"+idCotizacion+"' AND ID_PRODUCTO = '"+idProducto+"'";
             con=conex.conexion();
             pr=con.prepareStatement(sql);
+            pr.setInt(1, idCotizacion);
+            pr.setInt(2, idProducto);
             rs=pr.executeQuery();
             
             if ( rs.next() )

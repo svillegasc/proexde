@@ -30,8 +30,7 @@ public class DetallePedidoClienteDAO {
        try
        {  
             String sql="INSERT INTO DETALLE_PEDIDO_CLIENTE VALUES(?,?,?)";
-            con=conex.conexion();
-            pr=con.prepareStatement(sql); 
+            con=conex.conexion(); 
 
             pr=con.prepareStatement(sql); 
             pr.setInt(1,idPedido);
@@ -52,26 +51,24 @@ public class DetallePedidoClienteDAO {
         ArrayList<DetallePedidoCliente> result = new ArrayList<> ();
         DetallePedidoCliente dcc = new DetallePedidoCliente();
         
-        String seleccionar = sel != null && !sel.trim().equals("") ? sel : "";
-        String[] campos = cam != null && !cam.trim().equals("") ? cam.split(",") : null;
-        String[] valores = val != null && !val.trim().equals("") ? val.split(",") : null;
-        String orden = ord != null && !ord.trim().equals("") ? ord : "";
+        String seleccionar = sel != null && !"".trim().equals(sel) ? sel : "";
+        String[] campos = cam != null && !"".trim().equals(cam) ? cam.split(",") : null;
+        String[] valores = val != null && !"".trim().equals(val) ? val.split(",") : null;
+        String orden = ord != null && !"".trim().equals(ord) ? ord : "";
         
         try
         {
            con=conex.conexion();
-           //String sql="SELECT ID_INSUMO,DESCRIPCION,DESCRIPCION,UNIDAD_MEDIDA FROM INSUMOS WHERE ESTADO=0";
            StringBuilder sql = new StringBuilder();
            
            
-           if( !seleccionar.equals("") ){
+           if( !"".equals(seleccionar) ){
                sql.append("SELECT ");
                sql.append(seleccionar);
                sql.append(" FROM DETALLE_PEDIDO_CLIENTE ");
            }else{
                dcc.setIdPedido(-1);
                dcc.setIdProducto(-1);
-//               dcc.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                result.add(dcc);
                return result;
            }
@@ -83,7 +80,7 @@ public class DetallePedidoClienteDAO {
                         sql.append("WHERE ");
 
                         for (int i = 0; i < campos.length; i++) {
-                            if (campos[i].equals("DETALLE_PEDIDO_CLIENTE") || campos[i].equals("ESTADO")){
+                            if ("DETALLE_PEDIDO_CLIENTE".equals(campos[i]) || "ESTADO".equals(campos[i])){
                                 sql.append(campos[i]);
                                 sql.append(" = '");
                                 sql.append(valores[i]);
@@ -104,7 +101,6 @@ public class DetallePedidoClienteDAO {
                }else{
                     dcc.setIdPedido(-1);
                     dcc.setIdProducto(-1);
-     //               dcc.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                     result.add(dcc);
                     return result;
                 }        
@@ -112,7 +108,6 @@ public class DetallePedidoClienteDAO {
            if( (campos != null && valores == null) || (campos == null && valores != null) ){
                 dcc.setIdPedido(-1);
                 dcc.setIdProducto(-1);
-//               dcc.setEstado("ERROR: Faltan los campos a seleccionar en la consulta.");
                 result.add(dcc);
                 return result;  
            }
@@ -131,19 +126,19 @@ public class DetallePedidoClienteDAO {
            {    
                DetallePedidoCliente dCotCl = new DetallePedidoCliente();
                
-               if(select.length == 1 && select[0].trim().equals("*")){
+               if(select.length == 1 && "*".trim().equals(select[0])){
                    dCotCl.setIdPedido(rs.getInt("ID_PEDIDO"));
                    dCotCl.setIdProducto(rs.getInt("ID_PRODUCTO"));
                    dCotCl.setCantidadPedida(rs.getInt("CANTIDAD_PEDIDA"));
                }else{ 
                     for (int j = 0; j < select.length; j++) {
-                        if(select[j].toUpperCase().equals("ID_PEDIDO")){
+                        if("ID_PEDIDO".equalsIgnoreCase((select[j]))){
                             dCotCl.setIdPedido(rs.getInt("ID_PEDIDO"));
                         }  
-                        if(select[j].toUpperCase().equals("ID_PRODUCTO")){
+                        if("ID_PRODUCTO".equalsIgnoreCase((select[j]))){
                             dCotCl.setIdProducto(rs.getInt("ID_PRODUCTO"));
                         }
-                        if(select[j].toUpperCase().equals("CANTIDAD_PEDIDA")){
+                        if("CANTIDAD_PEDIDA".equalsIgnoreCase((select[j]))){
                             dCotCl.setCantidadPedida(rs.getInt("CANTIDAD_PEDIDA"));
                         }
                     }
@@ -151,11 +146,10 @@ public class DetallePedidoClienteDAO {
                result.add(dCotCl);            
            }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(DetallePedidoClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
             dcc.setIdPedido(-1);
             dcc.setIdProducto(-1);
-//            dcc.setEstado(ex.getMessage());
             result.add(dcc);
             return result;
         }
@@ -165,7 +159,9 @@ public class DetallePedidoClienteDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetallePedidoClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -192,7 +188,7 @@ public class DetallePedidoClienteDAO {
                
            }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
        {Logger.getLogger(DetallePedidoClienteDAO.class.getName()).log(Level.SEVERE, null, ex);}
        finally
        {
@@ -202,7 +198,9 @@ public class DetallePedidoClienteDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetallePedidoClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }
         return result;
     }
@@ -210,18 +208,25 @@ public class DetallePedidoClienteDAO {
     public String actualizarDetallePedidoCliente(int idPedido,int idProducto,int cantidadPedida)
     {
         int cantidadPed = 0;
+        String sqlI="SELECT COUNT (*) CONT FROM DETALLE_PEDIDO_CLIENTE WHERE "
+                    + "ID_PEDIDO = ? AND ID_PRODUCTO= ? ";
+        
+        String sql1="SELECT CANTIDAD_PEDIDA FROM DETALLE_PEDIDO_CLIENTE WHERE "
+                    + "ID_PEDIDO = ? AND ID_PRODUCTO = ? ";
         try
         {
-            String sqlI="SELECT COUNT (*) CONT FROM DETALLE_PEDIDO_CLIENTE WHERE "
-                    + "ID_PEDIDO = '"+idPedido+"' AND ID_PRODUCTO='"+idProducto+"'";
+            
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPedido);
+            pr.setInt(2, idProducto);
             rs=pr.executeQuery();
             
-            String sql1="SELECT CANTIDAD_PEDIDA FROM DETALLE_PEDIDO_CLIENTE WHERE "
-                    + "ID_PEDIDO = '"+idPedido+"' AND ID_PRODUCTO = '"+idProducto+"'";
+            
             con=conex.conexion();
             pr=con.prepareStatement(sql1);
+            pr.setInt(1, idPedido);
+            pr.setInt(2, idProducto);
             rs=pr.executeQuery();
             
             while ( rs.next() )
@@ -232,9 +237,11 @@ public class DetallePedidoClienteDAO {
             if(rs.next()){
                 if (rs.getInt("CONT")!= 0) {
                     String sql="UPDATE DETALLE_PEDIDO_CLIENTE SET CANTIDAD_PEDIDA='"+cantidadPedida+"'"
-                            + "WHERE ID_PEDIDO = '"+idPedido+"' AND ID_PRODUCTO='"+idProducto+"'";
+                            + "WHERE ID_PEDIDO = ? AND ID_PRODUCTO= ?";
                     con=conex.conexion();
                     pr=con.prepareStatement(sql);
+                    pr.setInt(1, idPedido);
+                    pr.setInt(2, idProducto);
                     pr.executeUpdate();
                     if(cantidadPed != cantidadPedida){
                         valorTotalPedido(idPedido,idProducto);
@@ -244,7 +251,7 @@ public class DetallePedidoClienteDAO {
                 }
             }
         }
-        catch(Exception ex){
+        catch(SQLException ex){
             Logger.getLogger(DetallePedidoClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
             return ex.getMessage();
         }
@@ -256,7 +263,9 @@ public class DetallePedidoClienteDAO {
                pr.close();
                con.close();
            }
-           catch(Exception ex){}
+           catch(SQLException ex){
+               Logger.getLogger(DetallePedidoClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+           }
        }    
         return "Se actualizo correctamente";
     }
@@ -267,19 +276,23 @@ public class DetallePedidoClienteDAO {
         DetalleCotizacionClienteDAO dcc = new DetalleCotizacionClienteDAO();
         try {
             String sql1="SELECT ID_COTIZACION, VALOR_TOTAL FROM PEDIDO "
-                      + "WHERE ID_Pedido = '"+idPedido+"'";
+                      + "WHERE ID_Pedido = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sql1);
+            pr.setInt(1, idPedido);
             rs=pr.executeQuery();
             if ( rs.next() )
             {
                 idCotizacion = rs.getInt("ID_COTIZACION");
                 valorTotal = rs.getInt("VALOR_TOTAL");
             }
+            
             String sql="SELECT CANTIDAD_PEDIDA FROM DETALLE_PEDIDO_CLIENTE "
-                     + "WHERE ID_PEDIDO = '"+idPedido+"' AND ID_PRODUCTO = '"+idProducto+"'";
+                     + "WHERE ID_PEDIDO = ? AND ID_PRODUCTO = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sql);
+            pr.setInt(1, idPedido);
+            pr.setInt(2, idProducto);
             rs=pr.executeQuery();
             
             if ( rs.next() )
@@ -289,9 +302,10 @@ public class DetallePedidoClienteDAO {
                 valorTotal = valorTotal + (cantidadPedida*precio);
             }
             String sqlI="UPDATE PEDIDO SET VALOR_TOTAL='"+valorTotal+"'"
-                    + "WHERE ID_PEDIDO = '"+idPedido+"'";
+                    + "WHERE ID_PEDIDO = ?";
             con=conex.conexion();
             pr=con.prepareStatement(sqlI);
+            pr.setInt(1, idPedido);
             pr.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DetalleCotizacionClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
